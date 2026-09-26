@@ -1,0 +1,50 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ErisTools",
+  "type": "object",
+  "definitions": {
+    "propose_action": {
+      "type": "object",
+      "description": "Kullanıcı onayı gerektiren bir eylemi teklif eder.",
+      "properties": {
+        "action_type": { "type": "string", "enum": ["calendar_write", "sms_to_self", "pin_memory"] },
+        "summary": { "type": "string", "description": "Kullanıcıya gösterilecek kısa ve net özet" },
+        "payload": { "type": "object", "description": "Eylemin gerektirdiği parametreler" }
+      },
+      "required": ["action_type", "summary", "payload"]
+    },
+    "execute_approved_action": {
+      "type": "object",
+      "description": "Kullanıcı tarafından açıkça onaylanmış bir eylemi yürütür.",
+      "properties": {
+        "approval_token": { "type": "string", "description": "Sistem tarafından üretilmiş geçerli ve tek kullanımlık onay belirteci" }
+      },
+      "required": ["approval_token"]
+    },
+    "get_calendar_events": {
+      "type": "object",
+      "description": "Kullanıcının yerel takvimindeki etkinlikleri okur.",
+      "properties": {
+        "start_time": { "type": "string", "format": "date-time" },
+        "end_time": { "type": "string", "format": "date-time" }
+      },
+      "required": ["start_time", "end_time"]
+    },
+    "web_research": {
+      "type": "object",
+      "description": "İnternet üzerinde araştırma yapar. Çıktı untrusted kabul edilir.",
+      "properties": {
+        "query": { "type": "string" }
+      },
+      "required": ["query"]
+    },
+    "get_market_data": {
+      "type": "object",
+      "description": "Finansal piyasa veya deniz/hava durumu verilerini getirir.",
+      "properties": {
+        "symbol_or_area": { "type": "string" }
+      },
+      "required": ["symbol_or_area"]
+    }
+  }
+}

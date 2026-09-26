@@ -1,0 +1,495 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		13A8D96966BD08AA36498344 /* ErisCore in Frameworks */ = {isa = PBXBuildFile; productRef = EB1ED390E6697F24E39E763B /* ErisCore */; };
+		18E5EA643FCED503074BCC74 /* ErisIOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B08AF4AB380BEF8C2487F03 /* ErisIOSApp.swift */; };
+		46B6A4C7B4052409EC5B6993 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 1BC93793130DA8E15E853B61 /* PrivacyInfo.xcprivacy */; };
+		820DACD3163FE3DB201B3EE7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13BE330CA8BBB2B43FC6846E /* Assets.xcassets */; };
+		90DC77746B7676CC77356B2D /* ErisCore in Frameworks */ = {isa = PBXBuildFile; productRef = 279EEED718B09BC238FED9D5 /* ErisCore */; };
+		A12F995F51212ED0114D991C /* ErisMacApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E6DA83FC9FD76E0AC172AB /* ErisMacApp.swift */; };
+		CE7616B6D46DDF83D92D4065 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = F7484BF2B7DC648785E92A91 /* PrivacyInfo.xcprivacy */; };
+		FD2767ECAE4A8E85938C5975 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4507015B7C3BCB7600D9678B /* Assets.xcassets */; };
+		FD997E6C3E65658EB03C1661 /* MainWindowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91876E903B42D028E24F00A2 /* MainWindowView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		11877A38A49777AE129FE60C /* ErisMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ErisMac.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		13BE330CA8BBB2B43FC6846E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		1BC93793130DA8E15E853B61 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		4507015B7C3BCB7600D9678B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		6B08AF4AB380BEF8C2487F03 /* ErisIOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErisIOSApp.swift; sourceTree = "<group>"; };
+		72024849BA491CCF81D66903 /* ErisIOS.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = ErisIOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8E21972562BBBE9DE56F743A /* ErisCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = ErisCore; path = Packages/ErisCore; sourceTree = SOURCE_ROOT; };
+		91876E903B42D028E24F00A2 /* MainWindowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainWindowView.swift; sourceTree = "<group>"; };
+		B5E6DA83FC9FD76E0AC172AB /* ErisMacApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErisMacApp.swift; sourceTree = "<group>"; };
+		F7484BF2B7DC648785E92A91 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		9974C89C87BBED0899DE1AD4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				90DC77746B7676CC77356B2D /* ErisCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BFD9D0D927AE518BB49594B6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				13A8D96966BD08AA36498344 /* ErisCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		218D9CFBDF0B9324514C37CE /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				8E21972562BBBE9DE56F743A /* ErisCore */,
+			);
+			path = Packages;
+			sourceTree = "<group>";
+		};
+		32E4853ECF8620959A42FD25 = {
+			isa = PBXGroup;
+			children = (
+				BCCCCCBE64C22D00C0AED472 /* ErisIOS */,
+				87857CA8D9E8ED713A5BF712 /* ErisMac */,
+				218D9CFBDF0B9324514C37CE /* Packages */,
+				5E7DCB3944B204B61A0B0A04 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5E7DCB3944B204B61A0B0A04 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				72024849BA491CCF81D66903 /* ErisIOS.app */,
+				11877A38A49777AE129FE60C /* ErisMac.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		87857CA8D9E8ED713A5BF712 /* ErisMac */ = {
+			isa = PBXGroup;
+			children = (
+				FF254A32230177E855CAA932 /* Resources */,
+				B5E6DA83FC9FD76E0AC172AB /* ErisMacApp.swift */,
+				91876E903B42D028E24F00A2 /* MainWindowView.swift */,
+			);
+			path = ErisMac;
+			sourceTree = "<group>";
+		};
+		BCCCCCBE64C22D00C0AED472 /* ErisIOS */ = {
+			isa = PBXGroup;
+			children = (
+				D7C75BB10720496AD71BF290 /* Resources */,
+				6B08AF4AB380BEF8C2487F03 /* ErisIOSApp.swift */,
+			);
+			path = ErisIOS;
+			sourceTree = "<group>";
+		};
+		D7C75BB10720496AD71BF290 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				13BE330CA8BBB2B43FC6846E /* Assets.xcassets */,
+				1BC93793130DA8E15E853B61 /* PrivacyInfo.xcprivacy */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		FF254A32230177E855CAA932 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				4507015B7C3BCB7600D9678B /* Assets.xcassets */,
+				F7484BF2B7DC648785E92A91 /* PrivacyInfo.xcprivacy */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		7AB67B75AA873B8622175076 /* ErisMac */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8290F62128C387A2438112C0 /* Build configuration list for PBXNativeTarget "ErisMac" */;
+			buildPhases = (
+				B460FA7030881A2C6029CDE5 /* Sources */,
+				E86DA29A27FB549671A204F4 /* Resources */,
+				9974C89C87BBED0899DE1AD4 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ErisMac;
+			packageProductDependencies = (
+				279EEED718B09BC238FED9D5 /* ErisCore */,
+			);
+			productName = ErisMac;
+			productReference = 11877A38A49777AE129FE60C /* ErisMac.app */;
+			productType = "com.apple.product-type.application";
+		};
+		F78790A5838AF992FA37144F /* ErisIOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1607CC84556B81BAF7FEC8C2 /* Build configuration list for PBXNativeTarget "ErisIOS" */;
+			buildPhases = (
+				C19323F78047DFC36845E7BD /* Sources */,
+				8014EEAA314EAA04B8BA32AE /* Resources */,
+				BFD9D0D927AE518BB49594B6 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ErisIOS;
+			packageProductDependencies = (
+				EB1ED390E6697F24E39E763B /* ErisCore */,
+			);
+			productName = ErisIOS;
+			productReference = 72024849BA491CCF81D66903 /* ErisIOS.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		3B0A3B04F9D6533745EDB649 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+				};
+			};
+			buildConfigurationList = E0C2C69598033AE5A2586203 /* Build configuration list for PBXProject "Eris" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 32E4853ECF8620959A42FD25;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				69115649C0B5FCAEDEE65AE1 /* XCLocalSwiftPackageReference "Packages/ErisCore" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 5E7DCB3944B204B61A0B0A04 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				7AB67B75AA873B8622175076 /* ErisMac */,
+				F78790A5838AF992FA37144F /* ErisIOS */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		8014EEAA314EAA04B8BA32AE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				820DACD3163FE3DB201B3EE7 /* Assets.xcassets in Resources */,
+				46B6A4C7B4052409EC5B6993 /* PrivacyInfo.xcprivacy in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E86DA29A27FB549671A204F4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FD2767ECAE4A8E85938C5975 /* Assets.xcassets in Resources */,
+				CE7616B6D46DDF83D92D4065 /* PrivacyInfo.xcprivacy in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		B460FA7030881A2C6029CDE5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A12F995F51212ED0114D991C /* ErisMacApp.swift in Sources */,
+				FD997E6C3E65658EB03C1661 /* MainWindowView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C19323F78047DFC36845E7BD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				18E5EA643FCED503074BCC74 /* ErisIOSApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		63D9C34716003A33E59C0F7E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = NO;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = ErisMac/Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.alfagolab.eris;
+				PRODUCT_NAME = Eris;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		75BE87BEEFD26A72D6EBF1BF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		802D5D76F3BF7E9DB3B61B55 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_IDENTITY = "-";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = ErisIOS/Resources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.alfagolab.eris.ios;
+				PRODUCT_NAME = ErisIOS;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		976476BB8D7B025E1E0BD3E1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = NO;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = ErisMac/Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.alfagolab.eris;
+				PRODUCT_NAME = Eris;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		A85D095F779DFBF943589968 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGNING_ALLOWED = NO;
+				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_IDENTITY = "-";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = ErisIOS/Resources/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.alfagolab.eris.ios;
+				PRODUCT_NAME = ErisIOS;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		DA24747B5BE6BF792483BD89 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1607CC84556B81BAF7FEC8C2 /* Build configuration list for PBXNativeTarget "ErisIOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A85D095F779DFBF943589968 /* Debug */,
+				802D5D76F3BF7E9DB3B61B55 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		8290F62128C387A2438112C0 /* Build configuration list for PBXNativeTarget "ErisMac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				976476BB8D7B025E1E0BD3E1 /* Debug */,
+				63D9C34716003A33E59C0F7E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		E0C2C69598033AE5A2586203 /* Build configuration list for PBXProject "Eris" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DA24747B5BE6BF792483BD89 /* Debug */,
+				75BE87BEEFD26A72D6EBF1BF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		69115649C0B5FCAEDEE65AE1 /* XCLocalSwiftPackageReference "Packages/ErisCore" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/ErisCore;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		279EEED718B09BC238FED9D5 /* ErisCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ErisCore;
+		};
+		EB1ED390E6697F24E39E763B /* ErisCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ErisCore;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 3B0A3B04F9D6533745EDB649 /* Project object */;
+}

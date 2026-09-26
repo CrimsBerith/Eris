@@ -1,0 +1,418 @@
+{
+  "builtTestProducts" : [
+
+  ],
+  "copyCommands" : {
+
+  },
+  "explicitTargetDependencyImportCheckingMode" : {
+    "none" : {
+
+    }
+  },
+  "generatedSourceTargetSet" : [
+
+  ],
+  "pluginDescriptions" : [
+
+  ],
+  "swiftCommands" : {
+    "C.ErisCore-arm64-apple-macosx-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/.build/arm64-apple-macosx/debug/ErisCore.build/sources",
+      "importPath" : "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/Sources/ErisCore/Capabilities/CalendarCapability.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/Sources/ErisCore/Capabilities/ExternalDataService.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/Sources/ErisCore/Capabilities/MorningBriefingService.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/Sources/ErisCore/Contracts/SystemPromptProvider.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/Sources/ErisCore/Intelligence/GeminiClient.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/Sources/ErisCore/Intelligence/GuardrailFilter.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/Sources/ErisCore/Models/Models.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/Sources/ErisCore/Storage/ErisMemoryDatabase.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/Sources/ErisCore/Storage/ErisSyncService.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/Sources/ErisCore/Storage/KeychainManager.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/Sources/ErisCore/Views/OnboardingView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/Sources/ErisCore/Voice/ErisSpeaker.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/Sources/ErisCore/Voice/ErisVoiceListener.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/Sources/ErisCore/Voice/VoiceWaveformView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/.build/arm64-apple-macosx/debug/ErisCore.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "ErisCore",
+      "moduleOutputPath" : "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/.build/arm64-apple-macosx/debug/Modules/ErisCore.swiftmodule",
+      "objects" : [
+        "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/.build/arm64-apple-macosx/debug/ErisCore.build/CalendarCapability.swift.o",
+        "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/.build/arm64-apple-macosx/debug/ErisCore.build/ExternalDataService.swift.o",
+        "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/.build/arm64-apple-macosx/debug/ErisCore.build/MorningBriefingService.swift.o",
+        "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/.build/arm64-apple-macosx/debug/ErisCore.build/SystemPromptProvider.swift.o",
+        "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/.build/arm64-apple-macosx/debug/ErisCore.build/GeminiClient.swift.o",
+        "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/.build/arm64-apple-macosx/debug/ErisCore.build/GuardrailFilter.swift.o",
+        "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/.build/arm64-apple-macosx/debug/ErisCore.build/Models.swift.o",
+        "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/.build/arm64-apple-macosx/debug/ErisCore.build/ErisMemoryDatabase.swift.o",
+        "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/.build/arm64-apple-macosx/debug/ErisCore.build/ErisSyncService.swift.o",
+        "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/.build/arm64-apple-macosx/debug/ErisCore.build/KeychainManager.swift.o",
+        "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/.build/arm64-apple-macosx/debug/ErisCore.build/OnboardingView.swift.o",
+        "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/.build/arm64-apple-macosx/debug/ErisCore.build/ErisSpeaker.swift.o",
+        "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/.build/arm64-apple-macosx/debug/ErisCore.build/ErisVoiceListener.swift.o",
+        "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/.build/arm64-apple-macosx/debug/ErisCore.build/VoiceWaveformView.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx14.0",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-j10",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-module-cache-path",
+        "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-emit-objc-header",
+        "-emit-objc-header-path",
+        "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/.build/arm64-apple-macosx/debug/ErisCore.build/include/ErisCore-Swift.h",
+        "-swift-version",
+        "5",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "eriscore"
+      ],
+      "outputFileMapPath" : "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/.build/arm64-apple-macosx/debug/ErisCore.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/.build/arm64-apple-macosx/debug/ErisCore.build/CalendarCapability.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/.build/arm64-apple-macosx/debug/ErisCore.build/ExternalDataService.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/.build/arm64-apple-macosx/debug/ErisCore.build/MorningBriefingService.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/.build/arm64-apple-macosx/debug/ErisCore.build/SystemPromptProvider.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/.build/arm64-apple-macosx/debug/ErisCore.build/GeminiClient.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/.build/arm64-apple-macosx/debug/ErisCore.build/GuardrailFilter.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/.build/arm64-apple-macosx/debug/ErisCore.build/Models.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/.build/arm64-apple-macosx/debug/ErisCore.build/ErisMemoryDatabase.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/.build/arm64-apple-macosx/debug/ErisCore.build/ErisSyncService.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/.build/arm64-apple-macosx/debug/ErisCore.build/KeychainManager.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/.build/arm64-apple-macosx/debug/ErisCore.build/OnboardingView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/.build/arm64-apple-macosx/debug/ErisCore.build/ErisSpeaker.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/.build/arm64-apple-macosx/debug/ErisCore.build/ErisVoiceListener.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/.build/arm64-apple-macosx/debug/ErisCore.build/VoiceWaveformView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/.build/arm64-apple-macosx/debug/Modules/ErisCore.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/Sources/ErisCore/Capabilities/CalendarCapability.swift",
+        "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/Sources/ErisCore/Capabilities/ExternalDataService.swift",
+        "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/Sources/ErisCore/Capabilities/MorningBriefingService.swift",
+        "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/Sources/ErisCore/Contracts/SystemPromptProvider.swift",
+        "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/Sources/ErisCore/Intelligence/GeminiClient.swift",
+        "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/Sources/ErisCore/Intelligence/GuardrailFilter.swift",
+        "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/Sources/ErisCore/Models/Models.swift",
+        "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/Sources/ErisCore/Storage/ErisMemoryDatabase.swift",
+        "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/Sources/ErisCore/Storage/ErisSyncService.swift",
+        "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/Sources/ErisCore/Storage/KeychainManager.swift",
+        "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/Sources/ErisCore/Views/OnboardingView.swift",
+        "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/Sources/ErisCore/Voice/ErisSpeaker.swift",
+        "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/Sources/ErisCore/Voice/ErisVoiceListener.swift",
+        "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/Sources/ErisCore/Voice/VoiceWaveformView.swift"
+      ],
+      "tempsPath" : "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/.build/arm64-apple-macosx/debug/ErisCore.build",
+      "wholeModuleOptimization" : false
+    }
+  },
+  "swiftFrontendCommands" : {
+
+  },
+  "swiftTargetScanArgs" : {
+    "ErisCore" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "ErisCore",
+      "-package-name",
+      "eriscore",
+      "-c",
+      "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/Sources/ErisCore/Capabilities/CalendarCapability.swift",
+      "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/Sources/ErisCore/Capabilities/ExternalDataService.swift",
+      "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/Sources/ErisCore/Capabilities/MorningBriefingService.swift",
+      "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/Sources/ErisCore/Contracts/SystemPromptProvider.swift",
+      "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/Sources/ErisCore/Intelligence/GeminiClient.swift",
+      "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/Sources/ErisCore/Intelligence/GuardrailFilter.swift",
+      "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/Sources/ErisCore/Models/Models.swift",
+      "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/Sources/ErisCore/Storage/ErisMemoryDatabase.swift",
+      "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/Sources/ErisCore/Storage/ErisSyncService.swift",
+      "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/Sources/ErisCore/Storage/KeychainManager.swift",
+      "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/Sources/ErisCore/Views/OnboardingView.swift",
+      "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/Sources/ErisCore/Voice/ErisSpeaker.swift",
+      "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/Sources/ErisCore/Voice/ErisVoiceListener.swift",
+      "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/Sources/ErisCore/Voice/VoiceWaveformView.swift",
+      "-I",
+      "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx14.0",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-j10",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-module-cache-path",
+      "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-emit-objc-header",
+      "-emit-objc-header-path",
+      "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/.build/arm64-apple-macosx/debug/ErisCore.build/include/ErisCore-Swift.h",
+      "-swift-version",
+      "5",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "eriscore",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ]
+  },
+  "targetDependencyMap" : {
+    "ErisCore" : [
+
+    ]
+  },
+  "testDiscoveryCommands" : {
+
+  },
+  "testEntryPointCommands" : {
+
+  },
+  "traitConfiguration" : {
+    "default" : {
+
+    }
+  },
+  "writeCommands" : {
+    "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/.build/arm64-apple-macosx/debug/ErisCore.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/Sources/ErisCore/Capabilities/CalendarCapability.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/Sources/ErisCore/Capabilities/ExternalDataService.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/Sources/ErisCore/Capabilities/MorningBriefingService.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/Sources/ErisCore/Contracts/SystemPromptProvider.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/Sources/ErisCore/Intelligence/GeminiClient.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/Sources/ErisCore/Intelligence/GuardrailFilter.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/Sources/ErisCore/Models/Models.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/Sources/ErisCore/Storage/ErisMemoryDatabase.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/Sources/ErisCore/Storage/ErisSyncService.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/Sources/ErisCore/Storage/KeychainManager.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/Sources/ErisCore/Views/OnboardingView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/Sources/ErisCore/Voice/ErisSpeaker.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/Sources/ErisCore/Voice/ErisVoiceListener.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/Sources/ErisCore/Voice/VoiceWaveformView.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/.build/arm64-apple-macosx/debug/ErisCore.build/sources"
+    },
+    "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt" : {
+      "alwaysOutOfDate" : true,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<swift-get-version>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+        }
+      ],
+      "outputFilePath" : "/Users/khankartal/Desktop/MAC APPS NEARLY FINISHED/Eris/Packages/ErisCore/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+    }
+  }
+}
