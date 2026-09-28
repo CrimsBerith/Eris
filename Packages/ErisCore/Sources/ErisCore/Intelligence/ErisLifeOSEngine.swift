@@ -225,6 +225,52 @@ public final class ErisLifeOSEngine: Sendable {
             return .extractedNote(extracted)
         }
         
+        // 2.7 Alışkanlıklar & Hedefler (Bölüm 22 & 23)
+        if lower.contains("alışkanlık") || lower.contains("hedef") || lower.contains("habit") || lower.contains("rutin") || lower.contains("streak") || lower.contains("zincir") {
+            let habits = ErisHabitsGoalsService.shared.getHabits()
+            let goals = ErisHabitsGoalsService.shared.getGoals()
+            let completedCount = habits.filter { $0.isCompletedToday }.count
+            
+            var reply = "🔥 Günlük Alışkanlıklar & Hedefleriniz:\n\n"
+            reply += "**Bugünün Alışkanlıkları (\(completedCount)/\(habits.count) Tamamlandı):**\n"
+            for habit in habits {
+                let status = habit.isCompletedToday ? "✅" : "⬜"
+                let streak = habit.currentStreakDays > 0 ? " (🔥 \(habit.currentStreakDays) gün)" : ""
+                reply += "\(status) \(habit.title)\(streak)\n"
+            }
+            
+            if !goals.isEmpty {
+                reply += "\n**Aktif Yaşam Hedefleri:**\n"
+                for goal in goals {
+                    reply += "🎯 **\(goal.title)** (İlerleme: %\(goal.progressPercent))\n"
+                    if goal.milestoneSubtasks.indices.contains(goal.currentMilestoneIndex) {
+                        reply += "   ↳ Sıradaki Adım: \(goal.milestoneSubtasks[goal.currentMilestoneIndex])\n"
+                    }
+                }
+            }
+            return .habitsGoalsSummary(
+                reply: reply,
+                spokenReply: "Bugün \(habits.count) alışkanlığınızdan \(completedCount) tanesini tamamladınız. Detayları ekrana getirdim."
+            )
+        }
+        
+        // 2.8 Hava Durumu & Deniz Raporu (Bölüm 31 & 32)
+        if (lower.contains("hava") || lower.contains("deniz") || lower.contains("rüzgar") || lower.contains("dalga") || lower.contains("marine") || lower.contains("sıcaklık")) && (lower.contains("rapor") || lower.contains("durum") || lower.contains("nasıl") || lower.contains("kaç derece") || lower.contains("ver") || lower.contains("göster")) {
+            let info = ExternalDataService.shared.getMarineWeather()
+            var reply = "🌊 Deniz & Hava Durumu Raporu (\(info.location)):\n\n"
+            reply += "🌡️ Hava Sıcaklığı: \(Int(info.airTempCelsius))°C\n"
+            reply += "🌊 Deniz Suyu: \(Int(info.seaTempCelsius))°C • Durum: \(info.seaCondition)\n"
+            reply += "💨 Rüzgar: \(String(format: "%.1f", info.windSpeedKnots)) knot (\(info.windDirection))\n"
+            reply += "〰️ Dalga Yüksekliği: \(String(format: "%.1f", info.waveHeightMeters)) m\n"
+            if let warn = info.warning {
+                reply += "\n⚠️ Uyarı: \(warn)"
+            }
+            return .marineWeatherSummary(
+                reply: reply,
+                spokenReply: "\(info.location) bölgesinde hava \(Int(info.airTempCelsius)) derece, deniz \(info.seaCondition) ve rüzgar \(Int(info.windSpeedKnots)) knot."
+            )
+        }
+        
         // 7. Takvim Komutları
         if lower.contains("toplantı ekle") || lower.contains("etkinlik ekle") || lower.contains("takvime kaydet") || lower.contains("randevu ekle") || lower.contains("prova ekle") {
             let parsed = CalendarCapability.parseNaturalLanguageEvent(from: trimmed) ?? (title: trimmed, startDate: Date().addingTimeInterval(3600), endDate: Date().addingTimeInterval(7200))
@@ -244,6 +290,8 @@ public enum LifeOSActionType: Sendable {
     case memoriesList(reply: String, spokenReply: String)
     case openLoopsSummary(reply: String, spokenReply: String)
     case livingChecklistsSummary(reply: String, spokenReply: String)
+    case habitsGoalsSummary(reply: String, spokenReply: String)
+    case marineWeatherSummary(reply: String, spokenReply: String)
     case pantryAndMeals(reply: String, spokenReply: String)
     case multiStepPlan(plan: DecomposedPlan, reply: String, spokenReply: String)
     case decisionMatrix(matrix: DecisionComparisonMatrix, reply: String, spokenReply: String)

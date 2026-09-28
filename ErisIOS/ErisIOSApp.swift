@@ -197,6 +197,15 @@ final class ErisIOSState: ObservableObject {
         ErisSpeaker.shared.speak(briefing, tone: self.selectedVoiceTone)
     }
     
+    func clearChat() {
+        ErisSpeaker.shared.stopSpeaking()
+        isSpeaking = false
+        isThinking = false
+        messages = [
+            Message(role: .assistant, content: "Eris hazır. Dinliyorum.")
+        ]
+    }
+    
     func addMemory(
         title: String? = nil,
         content: String,
@@ -247,6 +256,7 @@ final class ErisIOSState: ObservableObject {
     func sendUserMessage(_ text: String) {
         let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return }
+        inputText = ""
         
         let (isSafe, reason) = GuardrailFilter.validateInput(trimmed)
         guard isSafe else {
@@ -262,8 +272,19 @@ final class ErisIOSState: ObservableObject {
         switch lifeOSAction {
         case .morningBriefing:
             messages.append(Message(role: .user, content: trimmed))
-            inputText = ""
             playMorningBriefing()
+            return
+            
+        case .habitsGoalsSummary(let reply, let spokenReply):
+            messages.append(Message(role: .user, content: trimmed))
+            messages.append(Message(role: .assistant, content: reply))
+            ErisSpeaker.shared.speak(spokenReply, tone: self.selectedVoiceTone)
+            return
+            
+        case .marineWeatherSummary(let reply, let spokenReply):
+            messages.append(Message(role: .user, content: trimmed))
+            messages.append(Message(role: .assistant, content: reply))
+            ErisSpeaker.shared.speak(spokenReply, tone: self.selectedVoiceTone)
             return
             
         case .openLoopsSummary(let reply, let spokenReply):
@@ -547,6 +568,7 @@ struct IOSBottomTabBar: View {
         )
         .padding(.horizontal, 16)
         .padding(.bottom, 4)
+        .ignoresSafeArea(.keyboard, edges: .bottom)
     }
 }
 

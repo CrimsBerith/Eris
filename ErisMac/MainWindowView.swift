@@ -118,11 +118,21 @@ struct MainWindowView: View {
                         Button(action: { showChecklistsSheet = true }) {
                             Label("Yaşayan Listeler", systemImage: "checklist.checked")
                         }
-                        Button(action: { appState.sendUserMessage(L10n.promptListOpenLoops) }) {
+                        Button(action: {
+                            sidebarTab = .tasks
+                            appState.sendUserMessage(L10n.promptListOpenLoops)
+                        }) {
                             Label(L10n.openLoopsTitle, systemImage: "arrow.triangle.2.circlepath")
                         }
-                        Button(action: { appState.sendUserMessage(L10n.promptCheckHabits) }) {
+                        Button(action: {
+                            sidebarTab = .tasks
+                            appState.sendUserMessage(L10n.promptCheckHabits)
+                        }) {
                             Label(L10n.habitsGoalsTitle, systemImage: "flame.fill")
+                        }
+                        Divider()
+                        Button(action: { appState.clearChat() }) {
+                            Label("Yeni Sohbet (⌘N)", systemImage: "square.and.pencil")
                         }
                     } label: {
                         HStack(spacing: 5) {
@@ -255,8 +265,8 @@ struct MainWindowView: View {
                     .padding(.bottom, 6)
                 }
                 
-                // Sohbet İçi Hızlı Öneri Hapları
-                if appState.messages.count > 1 || !appState.isCompactMode {
+                // Sohbet İçi Hızlı Öneri Hapları (Yalnızca mesajlar varken gösterilir)
+                if appState.messages.count > 1 {
                     ErisPromptSuggestionsBar { promptText in
                         appState.sendUserMessage(promptText)
                     }
@@ -268,6 +278,10 @@ struct MainWindowView: View {
                 HStack(spacing: 8) {
                     // Hızlı Aksiyon Menüsü (+)
                     Menu {
+                        Button(action: { appState.clearChat() }) {
+                            Label("Yeni Sohbet", systemImage: "square.and.pencil")
+                        }
+                        Divider()
                         Button(action: { appState.playMorningBriefing() }) {
                             Label(L10n.morningBriefingTitle, systemImage: "sun.max.fill")
                         }
@@ -277,10 +291,16 @@ struct MainWindowView: View {
                         Button(action: { showChecklistsSheet = true }) {
                             Label(L10n.livingListsTitle, systemImage: "checklist.checked")
                         }
-                        Button(action: { appState.sendUserMessage(L10n.promptListOpenLoops) }) {
+                        Button(action: {
+                            sidebarTab = .tasks
+                            appState.sendUserMessage(L10n.promptListOpenLoops)
+                        }) {
                             Label(L10n.openLoopsTitle, systemImage: "arrow.triangle.2.circlepath")
                         }
-                        Button(action: { appState.sendUserMessage(L10n.promptCheckHabits) }) {
+                        Button(action: {
+                            sidebarTab = .tasks
+                            appState.sendUserMessage(L10n.promptCheckHabits)
+                        }) {
                             Label(L10n.habitsGoalsTitle, systemImage: "flame.fill")
                         }
                     } label: {

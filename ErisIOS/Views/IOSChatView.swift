@@ -9,6 +9,7 @@ import ErisCore
 struct IOSChatView: View {
     @EnvironmentObject var appState: ErisIOSState
     @ObservedObject var personaManager = ErisAgentPersonaManager.shared
+    @FocusState private var isInputFocused: Bool
     @State private var showAgentPicker: Bool = false
     @State private var isCreatingNewAgent: Bool = false
     @State private var showSaveToast: Bool = false
@@ -17,8 +18,8 @@ struct IOSChatView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            // Üst Şerit: Ajan Seçici + Hava Durumu + Brifing
-            HStack(spacing: 10) {
+            // Üst Şerit: Ajan Seçici + Hava Durumu + Brifing + Yeni Sohbet
+            HStack(spacing: 8) {
                 // Aktif Özel Ajan Seçici Pill
                 Button(action: {
                     showAgentPicker = true
@@ -31,7 +32,7 @@ struct IOSChatView: View {
                             .font(.system(size: 11.5, weight: .semibold))
                             .foregroundColor(ErisTheme.coldWhite)
                             .lineLimit(1)
-                            .frame(maxWidth: 120)
+                            .frame(maxWidth: 110)
                             .truncationMode(.tail)
                         Image(systemName: "chevron.down")
                             .font(.system(size: 8, weight: .bold))
@@ -71,8 +72,8 @@ struct IOSChatView: View {
                             .font(.system(size: 11.5, weight: .semibold))
                             .foregroundColor(ErisTheme.coldWhite)
                     }
-                    .padding(.horizontal, 10)
-                    .padding(.vertical, 7)
+                    .padding(.horizontal, 9)
+                    .padding(.vertical, 6)
                     .background(
                         Capsule()
                             .fill(Color(red: 0.98, green: 0.75, blue: 0.28).opacity(0.14))
@@ -80,8 +81,30 @@ struct IOSChatView: View {
                     )
                 }
                 .buttonStyle(.plain)
+                
+                // Yeni Sohbet Butonu (Yalnızca mesaj varken gösterilir)
+                if appState.messages.count > 1 {
+                    Button(action: {
+                        withAnimation {
+                            appState.clearChat()
+                        }
+                    }) {
+                        HStack(spacing: 4) {
+                            Image(systemName: "plus.bubble")
+                                .font(.system(size: 11, weight: .bold))
+                                .foregroundColor(ErisTheme.bronzeHighlight)
+                            Text("Yeni")
+                                .font(.system(size: 11.5, weight: .semibold))
+                                .foregroundColor(ErisTheme.coldWhite)
+                        }
+                        .padding(.horizontal, 9)
+                        .padding(.vertical, 6)
+                        .background(Capsule().fill(Color.white.opacity(0.06)))
+                    }
+                    .buttonStyle(.plain)
+                }
             }
-            .padding(.horizontal, 16)
+            .padding(.horizontal, 14)
             .padding(.vertical, 8)
             .background(Color.white.opacity(0.02))
             
@@ -102,6 +125,7 @@ struct IOSChatView: View {
                     .padding(.top, 10)
                     .padding(.bottom, 20)
                 }
+                .scrollDismissesKeyboard(.interactively)
             } else {
                 ScrollViewReader { proxy in
                     ScrollView {
@@ -116,6 +140,7 @@ struct IOSChatView: View {
                         .padding(.top, 10)
                         .padding(.bottom, 20)
                     }
+                    .scrollDismissesKeyboard(.interactively)
                     .onChange(of: appState.messages.count) { _, _ in
                         withAnimation(.messageEntry) {
                             if let last = appState.messages.last {
@@ -214,6 +239,16 @@ struct IOSChatView: View {
             HStack(spacing: 8) {
                 // Hızlı Eylem Menüsü (+)
                 Menu {
+                    if appState.messages.count > 1 {
+                        Button(role: .destructive, action: {
+                            withAnimation {
+                                appState.clearChat()
+                            }
+                        }) {
+                            Label("Yeni Sohbet", systemImage: "plus.bubble")
+                        }
+                        Divider()
+                    }
                     Button(action: { appState.playMorningBriefing() }) {
                         Label(L10n.morningBriefingTitle, systemImage: "sun.max.fill")
                     }
@@ -241,6 +276,7 @@ struct IOSChatView: View {
                     TextField(L10n.askErisPlaceholder, text: $appState.inputText)
                         .font(.system(size: 14))
                         .foregroundColor(ErisTheme.coldWhite)
+                        .focused($isInputFocused)
                         .onSubmit {
                             appState.sendUserMessage(appState.inputText)
                         }
@@ -305,7 +341,8 @@ struct IOSChatView: View {
                 }
             }
             .padding(.horizontal, 14)
-            .padding(.bottom, 78) // Bottom Tab Bar için güvenli boşluk
+            .padding(.bottom, isInputFocused ? 12 : 78)
+            .animation(.easeOut(duration: 0.22), value: isInputFocused)
         }
         .sheet(isPresented: $showAgentPicker) {
             IOSAgentQuickSwitcherView {

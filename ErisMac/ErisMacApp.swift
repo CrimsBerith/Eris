@@ -103,10 +103,13 @@ final class ErisMacState: ObservableObject {
     }
     
     func setupGlobalShortcuts() {
-        // macOS: Cmd+Shift+E kısayolu (Key code 14 = 'E')
+        // macOS: Cmd+Shift+E kısayolu (Key code 14 = 'E') & Cmd+N kısayolu (Key code 45 = 'N')
         localKeyMonitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { [weak self] event in
             if event.modifierFlags.contains([.command, .shift]) && event.keyCode == 14 {
                 self?.toggleListening()
+                return nil
+            } else if event.modifierFlags.contains(.command) && !event.modifierFlags.contains(.shift) && event.keyCode == 45 {
+                self?.clearChat()
                 return nil
             }
             return event
@@ -197,8 +200,16 @@ final class ErisMacState: ObservableObject {
     
     func toggleAlwaysOnTop() {
         isAlwaysOnTop.toggle()
-        if let window = NSApp.windows.first {
+        if let window = NSApp.keyWindow ?? NSApp.mainWindow ?? NSApp.windows.first(where: { $0.canBecomeMain }) ?? NSApp.windows.first {
             window.level = isAlwaysOnTop ? .floating : .normal
+        }
+    }
+    
+    func clearChat() {
+        withAnimation(.easeInOut(duration: 0.25)) {
+            messages = [Message(role: .assistant, content: "Eris hazır. Dinliyorum.")]
+            pendingApproval = nil
+            inputText = ""
         }
     }
     
@@ -262,6 +273,7 @@ final class ErisMacState: ObservableObject {
     func sendUserMessage(_ text: String) {
         let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return }
+        inputText = ""
         
         let (isSafe, reason) = GuardrailFilter.validateInput(trimmed)
         guard isSafe else {
@@ -277,20 +289,29 @@ final class ErisMacState: ObservableObject {
         switch lifeOSAction {
         case .morningBriefing:
             messages.append(Message(role: .user, content: trimmed))
-            inputText = ""
             playMorningBriefing()
             return
             
         case .openLoopsSummary(let reply, let spokenReply):
             messages.append(Message(role: .user, content: trimmed))
-            inputText = ""
             messages.append(Message(role: .assistant, content: reply))
             ErisSpeaker.shared.speak(spokenReply, tone: self.selectedVoiceTone)
             return
             
         case .livingChecklistsSummary(let reply, let spokenReply):
             messages.append(Message(role: .user, content: trimmed))
-            inputText = ""
+            messages.append(Message(role: .assistant, content: reply))
+            ErisSpeaker.shared.speak(spokenReply, tone: self.selectedVoiceTone)
+            return
+            
+        case .habitsGoalsSummary(let reply, let spokenReply):
+            messages.append(Message(role: .user, content: trimmed))
+            messages.append(Message(role: .assistant, content: reply))
+            ErisSpeaker.shared.speak(spokenReply, tone: self.selectedVoiceTone)
+            return
+            
+        case .marineWeatherSummary(let reply, let spokenReply):
+            messages.append(Message(role: .user, content: trimmed))
             messages.append(Message(role: .assistant, content: reply))
             ErisSpeaker.shared.speak(spokenReply, tone: self.selectedVoiceTone)
             return
