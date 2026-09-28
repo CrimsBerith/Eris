@@ -18,9 +18,32 @@ public final class ErisOpenLoopsEngine: ObservableObject, @unchecked Sendable {
     @Published public private(set) var activeLoops: [OpenLoopItem] = []
     
     private let queue = DispatchQueue(label: "com.eris.openloops", qos: .userInitiated)
+    private let storageKey = "eris_open_loops_v1"
+    private let appGroupSuite = "group.com.alfagolab.eris"
     
     private init() {
+        loadLoops()
+    }
+    
+    public func loadLoops() {
+        let groupDefaults = UserDefaults(suiteName: appGroupSuite)
+        if let data = groupDefaults?.data(forKey: storageKey) ?? UserDefaults.standard.data(forKey: storageKey),
+           let loaded = try? JSONDecoder().decode([OpenLoopItem].self, from: data),
+           !loaded.isEmpty {
+            self.activeLoops = loaded
+            return
+        }
         loadDefaultSampleLoops()
+        saveLoops()
+    }
+    
+    public func saveLoops() {
+        if let data = try? JSONEncoder().encode(activeLoops) {
+            UserDefaults.standard.set(data, forKey: storageKey)
+            if let groupDefaults = UserDefaults(suiteName: appGroupSuite) {
+                groupDefaults.set(data, forKey: storageKey)
+            }
+        }
     }
     
     /// Varsayılan yaşam döngüsü örnekleriyle başlat (Kullanıcı ilk açtığında hazır yapı)
@@ -65,6 +88,7 @@ public final class ErisOpenLoopsEngine: ObservableObject, @unchecked Sendable {
         queue.async {
             DispatchQueue.main.async {
                 self.activeLoops.insert(item, at: 0)
+                self.saveLoops()
             }
         }
     }
@@ -75,6 +99,7 @@ public final class ErisOpenLoopsEngine: ObservableObject, @unchecked Sendable {
                 if let idx = self.activeLoops.firstIndex(where: { $0.id == id }) {
                     self.activeLoops[idx].status = .completed
                     self.activeLoops[idx].updatedAt = Date()
+                    self.saveLoops()
                 }
             }
         }
@@ -84,6 +109,16 @@ public final class ErisOpenLoopsEngine: ObservableObject, @unchecked Sendable {
         queue.async {
             DispatchQueue.main.async {
                 self.activeLoops.removeAll(where: { $0.id == id })
+                self.saveLoops()
+            }
+        }
+    }
+    
+    public func setLoopsFromCloud(_ items: [OpenLoopItem]) {
+        queue.async {
+            DispatchQueue.main.async {
+                self.activeLoops = items
+                self.saveLoops()
             }
         }
     }

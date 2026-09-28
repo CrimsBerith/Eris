@@ -69,9 +69,48 @@ public final class ErisHabitsGoalsService: ObservableObject, @unchecked Sendable
     @Published public private(set) var goals: [PersonalGoalItem] = []
     @Published public private(set) var habits: [DailyHabitRecord] = []
     private let lock = NSLock()
+    private let goalsKey = "eris_personal_goals_v1"
+    private let habitsKey = "eris_daily_habits_v1"
+    private let appGroupSuite = "group.com.alfagolab.eris"
     
     private init() {
-        loadDefaultSampleGoalsAndHabits()
+        loadData()
+    }
+    
+    private func loadData() {
+        let groupDefaults = UserDefaults(suiteName: appGroupSuite)
+        var hasGoals = false
+        if let data = groupDefaults?.data(forKey: goalsKey) ?? UserDefaults.standard.data(forKey: goalsKey),
+           let decoded = try? JSONDecoder().decode([PersonalGoalItem].self, from: data),
+           !decoded.isEmpty {
+            self.goals = decoded
+            hasGoals = true
+        }
+        
+        var hasHabits = false
+        if let data = groupDefaults?.data(forKey: habitsKey) ?? UserDefaults.standard.data(forKey: habitsKey),
+           let decoded = try? JSONDecoder().decode([DailyHabitRecord].self, from: data),
+           !decoded.isEmpty {
+            self.habits = decoded
+            hasHabits = true
+        }
+        
+        if !hasGoals || !hasHabits {
+            loadDefaultSampleGoalsAndHabits()
+            saveData()
+        }
+    }
+    
+    private func saveData() {
+        let groupDefaults = UserDefaults(suiteName: appGroupSuite)
+        if let gData = try? JSONEncoder().encode(goals) {
+            UserDefaults.standard.set(gData, forKey: goalsKey)
+            groupDefaults?.set(gData, forKey: goalsKey)
+        }
+        if let hData = try? JSONEncoder().encode(habits) {
+            UserDefaults.standard.set(hData, forKey: habitsKey)
+            groupDefaults?.set(hData, forKey: habitsKey)
+        }
     }
     
     private func loadDefaultSampleGoalsAndHabits() {
@@ -130,6 +169,7 @@ public final class ErisHabitsGoalsService: ObservableObject, @unchecked Sendable
             } else {
                 habits[idx].currentStreakDays = max(0, habits[idx].currentStreakDays - 1)
             }
+            saveData()
         }
     }
 }

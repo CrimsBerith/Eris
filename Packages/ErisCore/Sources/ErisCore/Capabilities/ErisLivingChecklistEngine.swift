@@ -17,9 +17,32 @@ public final class ErisLivingChecklistEngine: ObservableObject, @unchecked Senda
     @Published public private(set) var checklists: [LivingChecklist] = []
     
     private let queue = DispatchQueue(label: "com.eris.checklists", qos: .userInitiated)
+    private let storageKey = "eris_living_checklists_v1"
+    private let appGroupSuite = "group.com.alfagolab.eris"
     
     private init() {
+        loadChecklists()
+    }
+    
+    public func loadChecklists() {
+        let groupDefaults = UserDefaults(suiteName: appGroupSuite)
+        if let data = groupDefaults?.data(forKey: storageKey) ?? UserDefaults.standard.data(forKey: storageKey),
+           let loaded = try? JSONDecoder().decode([LivingChecklist].self, from: data),
+           !loaded.isEmpty {
+            self.checklists = loaded
+            return
+        }
         loadDefaultChecklists()
+        saveChecklists()
+    }
+    
+    public func saveChecklists() {
+        if let data = try? JSONEncoder().encode(checklists) {
+            UserDefaults.standard.set(data, forKey: storageKey)
+            if let groupDefaults = UserDefaults(suiteName: appGroupSuite) {
+                groupDefaults.set(data, forKey: storageKey)
+            }
+        }
     }
     
     private func loadDefaultChecklists() {
@@ -79,6 +102,7 @@ public final class ErisLivingChecklistEngine: ObservableObject, @unchecked Senda
                 
                 self.checklists[listIdx].items[itemIdx].isCompleted.toggle()
                 self.checklists[listIdx].updatedAt = Date()
+                self.saveChecklists()
             }
         }
     }
@@ -90,6 +114,7 @@ public final class ErisLivingChecklistEngine: ObservableObject, @unchecked Senda
                 let newItem = ChecklistItem(title: title, category: category)
                 self.checklists[listIdx].items.append(newItem)
                 self.checklists[listIdx].updatedAt = Date()
+                self.saveChecklists()
             }
         }
     }
@@ -106,6 +131,7 @@ public final class ErisLivingChecklistEngine: ObservableObject, @unchecked Senda
         queue.async {
             DispatchQueue.main.async {
                 self.checklists.insert(checklist, at: 0)
+                self.saveChecklists()
             }
         }
     }
@@ -116,6 +142,7 @@ public final class ErisLivingChecklistEngine: ObservableObject, @unchecked Senda
                 guard let listIdx = self.checklists.firstIndex(where: { $0.id == checklistId }) else { return }
                 self.checklists[listIdx].items.removeAll(where: { $0.id == itemId })
                 self.checklists[listIdx].updatedAt = Date()
+                self.saveChecklists()
             }
         }
     }
@@ -124,6 +151,7 @@ public final class ErisLivingChecklistEngine: ObservableObject, @unchecked Senda
         queue.async {
             DispatchQueue.main.async {
                 self.checklists.removeAll(where: { $0.id == id })
+                self.saveChecklists()
             }
         }
     }
@@ -134,6 +162,7 @@ public final class ErisLivingChecklistEngine: ObservableObject, @unchecked Senda
                 guard let listIdx = self.checklists.firstIndex(where: { $0.id == checklistId }) else { return }
                 self.checklists[listIdx].items.removeAll(where: { $0.isCompleted })
                 self.checklists[listIdx].updatedAt = Date()
+                self.saveChecklists()
             }
         }
     }
@@ -146,6 +175,16 @@ public final class ErisLivingChecklistEngine: ObservableObject, @unchecked Senda
                     self.checklists[listIdx].items[i].isCompleted = true
                 }
                 self.checklists[listIdx].updatedAt = Date()
+                self.saveChecklists()
+            }
+        }
+    }
+    
+    public func setChecklistsFromCloud(_ items: [LivingChecklist]) {
+        queue.async {
+            DispatchQueue.main.async {
+                self.checklists = items
+                self.saveChecklists()
             }
         }
     }

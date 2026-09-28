@@ -6,6 +6,8 @@ public final class ErisSyncService: @unchecked Sendable {
     private let keyValueStore = NSUbiquitousKeyValueStore.default
     private let memoriesSyncKey = "eris_synced_memories_v1"
     private let preferencesSyncKey = "eris_synced_preferences_v1"
+    private let openLoopsSyncKey = "eris_synced_open_loops_v1"
+    private let checklistsSyncKey = "eris_synced_checklists_v1"
     
     public var onSyncUpdated: (@Sendable () -> Void)?
     
@@ -20,38 +22,59 @@ public final class ErisSyncService: @unchecked Sendable {
         keyValueStore.synchronize()
     }
     
-    /// Yerel hafızayı iCloud'a yükler
+    /// Yerel hafızayı, açık döngüleri ve kontrol listelerini iCloud'a yükler
     public func pushToCloud() {
         let localMemories = ErisMemoryDatabase.shared.getAllMemories()
-        do {
-            let data = try JSONEncoder().encode(localMemories)
+        if let data = try? JSONEncoder().encode(localMemories) {
             keyValueStore.set(data, forKey: memoriesSyncKey)
-            keyValueStore.synchronize()
-        } catch {
-            print("iCloud hafıza eşitleme hatası: \(error)")
         }
+        
+        let localLoops = ErisOpenLoopsEngine.shared.activeLoops
+        if let data = try? JSONEncoder().encode(localLoops) {
+            keyValueStore.set(data, forKey: openLoopsSyncKey)
+        }
+        
+        let localChecklists = ErisLivingChecklistEngine.shared.checklists
+        if let data = try? JSONEncoder().encode(localChecklists) {
+            keyValueStore.set(data, forKey: checklistsSyncKey)
+        }
+        
+        keyValueStore.synchronize()
     }
     
-    /// iCloud'daki yeni verileri çeker ve yerel SQLite'a kaydeder
+    /// iCloud'daki yeni verileri çeker ve yerel motorlara aktarır
     public func pullFromCloud() {
-        guard let data = keyValueStore.data(forKey: memoriesSyncKey) else { return }
-        do {
-            let remoteMemories = try JSONDecoder().decode([ErisMemoryRecord].self, from: data)
-            let localMemories = ErisMemoryDatabase.shared.getAllMemories()
-            let localIds = Set(localMemories.map { $0.id })
-            
-            var hasNew = false
-            for remote in remoteMemories {
-                if !localIds.contains(remote.id) {
-                    ErisMemoryDatabase.shared.saveMemoryInternal(remote)
-                    hasNew = true
+        var hasNew = false
+        
+        if let data = keyValueStore.data(forKey: memoriesSyncKey) {
+            if let remoteMemories = try? JSONDecoder().decode([ErisMemoryRecord].self, from: data) {
+                let localMemories = ErisMemoryDatabase.shared.getAllMemories()
+                let localIds = Set(localMemories.map { $0.id })
+                for remote in remoteMemories {
+                    if !localIds.contains(remote.id) {
+                        ErisMemoryDatabase.shared.saveMemoryInternal(remote)
+                        hasNew = true
+                    }
                 }
             }
-            if hasNew {
-                onSyncUpdated?()
+        }
+        
+        if let data = keyValueStore.data(forKey: openLoopsSyncKey) {
+            if let remoteLoops = try? JSONDecoder().decode([OpenLoopItem].self, from: data), !remoteLoops.isEmpty {
+                ErisOpenLoopsEngine.shared.setLoopsFromCloud(remoteLoops)
+                hasNew = true
             }
-        } catch {
-            print("iCloud veri alma hatası: \(error)")
+        }
+        
+        if let data = keyValueStore.data(forKey: checklistsSyncKey) {
+            if let remoteChecklists = try? JSONDecoder().decode([LivingChecklist].self, from: data), !remoteChecklists.isEmpty {
+                ErisLivingChecklistEngine.shared.setChecklistsFromCloud(remoteChecklists)
+                hasNew = true
+            }
+        }
+        
+        if hasNew {
+            onSyncUpdated?()
         }
     }
     
