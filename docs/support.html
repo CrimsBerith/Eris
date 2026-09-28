@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eris — Destek & İletişim (Support)</title>
+    <style>
+        :root {
+            --bg-color: #121316;
+            --surface-color: #1c1d22;
+            --accent-bronze: #C49A6C;
+            --text-white: #E5E5E7;
+            --text-gray: #8E8E93;
+            --border-color: rgba(196, 154, 108, 0.2);
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-white);
+            line-height: 1.6;
+            margin: 0;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 780px;
+            margin: 0 auto;
+            background-color: var(--surface-color);
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        }
+        .header {
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 24px;
+            margin-bottom: 28px;
+        }
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: var(--accent-bronze);
+        }
+        h1 {
+            font-size: 24px;
+            margin-top: 10px;
+            margin-bottom: 6px;
+            color: var(--text-white);
+        }
+        h2 {
+            font-size: 18px;
+            color: var(--accent-bronze);
+            margin-top: 28px;
+            margin-bottom: 10px;
+        }
+        p, li {
+            font-size: 14.5px;
+            color: rgba(229, 229, 231, 0.9);
+        }
+        .faq-item {
+            margin-bottom: 16px;
+            padding: 16px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .faq-q {
+            font-weight: 600;
+            color: var(--accent-bronze);
+            margin-bottom: 6px;
+        }
+        .contact-box {
+            background: rgba(196, 154, 108, 0.1);
+            padding: 20px;
+            border-radius: 14px;
+            border: 1px solid var(--border-color);
+            margin-top: 24px;
+        }
+        .footer {
+            margin-top: 36px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            font-size: 13px;
+            color: var(--text-gray);
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">ERIS</div>
+            <h1>Destek & Sık Sorulan Sorular</h1>
+            <div style="font-size: 13px; color: var(--text-gray);">AlfaGo Lab • Eris v1.0</div>
+        </div>
+
+        <h2>Sık Sorulan Sorular (SSS)</h2>
+        
+        <div class="faq-item">
+            <div class="faq-q">Eris'i kullanmak için API anahtarı girmem gerekiyor mu?</div>
+            <div>Hayır. Eris sıfır-kurulum mimarisiyle geliştirilmiştir. Herhangi bir teknik ayar veya API anahtarı girmeden doğrudan kullanabilirsiniz.</div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-q">"Hey Eris" nasıl çalışır?</div>
+            <div>Uygulama açıkken veya arka planda dinleme açık olduğunda "Hey Eris" diyerek mikrofonu aktive edebilirsiniz. Mac'te ayrıca <strong>⌘ + ⇧ + E</strong> kısayolu veya iPhone'da mikrofona uzun basma (Push-to-Talk) özelliği mevcuttur.</div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-q">Kumaş fiyatlarını ve tedarikçi notlarını nasıl kaydederim?</div>
+            <div>Sohbet sırasında Eris'e sesli veya yazılı olarak fiyatı söylemeniz yeterlidir (Örn: "Osmanbey'den ipek saten metresi 24 dolar fiyat aldım"). Eris onayınızı istedikten sonra bunu güvenli hafızaya kaydeder.</div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-q">Verilerim Mac ve iPhone arasında senkronize olur mu?</div>
+            <div>Evet. Apple iCloud hesabınız aktif olduğunda kayıtlı hafıza notlarınız ve tercihleriniz otomatik olarak eşitlenir.</div>
+        </div>
+
+        <div class="contact-box">
+            <h2 style="margin-top: 0;">Bizimle İletişime Geçin</h2>
+            <p>Hata bildirimleri, geri bildirimler veya iş ortaklığı talepleri için destek ekibimiz 7/24 yanınızda:</p>
+            <p>📧 <strong>support@alfagolab.com</strong></p>
+        </div>
+
+        <div class="footer">
+            &copy; 2026 AlfaGo Lab. Tüm hakları saklıdır.
+        </div>
+    </div>
+</body>
+</html>

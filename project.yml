@@ -45,6 +45,7 @@ targets:
         CODE_SIGNING_REQUIRED: NO
         CODE_SIGNING_ALLOWED: NO
         ENABLE_HARDENED_RUNTIME: NO
+        CODE_SIGN_ENTITLEMENTS: ErisMac/Resources/ErisMac.entitlements
 
   ErisIOS:
     type: application
@@ -70,3 +71,4 @@ targets:
         CODE_SIGN_IDENTITY: "-"
         CODE_SIGNING_REQUIRED: NO
         CODE_SIGNING_ALLOWED: NO
+        CODE_SIGN_ENTITLEMENTS: ErisIOS/Resources/ErisIOS.entitlements

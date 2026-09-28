@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eris — Gizlilik Politikası (Privacy Policy)</title>
+    <style>
+        :root {
+            --bg-color: #121316;
+            --surface-color: #1c1d22;
+            --accent-bronze: #C49A6C;
+            --text-white: #E5E5E7;
+            --text-gray: #8E8E93;
+            --border-color: rgba(196, 154, 108, 0.2);
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-white);
+            line-height: 1.6;
+            margin: 0;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 780px;
+            margin: 0 auto;
+            background-color: var(--surface-color);
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        }
+        .header {
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 24px;
+            margin-bottom: 28px;
+        }
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: var(--accent-bronze);
+        }
+        h1 {
+            font-size: 24px;
+            margin-top: 10px;
+            margin-bottom: 6px;
+            color: var(--text-white);
+        }
+        .meta {
+            font-size: 13px;
+            color: var(--text-gray);
+        }
+        h2 {
+            font-size: 18px;
+            color: var(--accent-bronze);
+            margin-top: 28px;
+            margin-bottom: 10px;
+        }
+        p, li {
+            font-size: 14.5px;
+            color: rgba(229, 229, 231, 0.9);
+        }
+        ul {
+            padding-left: 20px;
+        }
+        .badge {
+            display: inline-block;
+            background-color: rgba(196, 154, 108, 0.15);
+            color: var(--accent-bronze);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 14px;
+        }
+        .footer {
+            margin-top: 36px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            font-size: 13px;
+            color: var(--text-gray);
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">ERIS</div>
+            <h1>Gizlilik Politikası (Privacy Policy)</h1>
+            <div class="meta">Son Güncelleme: 28 Eylül 2026 • AlfaGo Lab</div>
+        </div>
+
+        <div class="badge">Gizlilik Önce (Privacy-First) & Sıfır-Güven (Zero-Trust)</div>
+
+        <p>AlfaGo Lab ("biz"), kullanıcılarımızın gizliliğine en yüksek derecede önem vermektedir. Eris (macOS ve iOS) uygulaması, kullanıcı verilerinin gizliliğini koruma temel prensibi üzerine inşa edilmiştir.</p>
+
+        <h2>1. Toplanan ve İşlenen Veriler</h2>
+        <ul>
+            <li><strong>Ses Verileri ve Konuşma Tanıma:</strong> Sesli komutları işlemek ("Hey Eris", sesli konuşma) amacıyla Apple'ın yerel Speech Framework altyapısı kullanılır. Ses kayıtlarınız asla sunucularda saklanmaz veya depolanmaz.</li>
+            <li><strong>Takvim Erişimi:</strong> Günün ajandasını brifing olarak okumak ve yalnızca sizin açık onayınızla etkinlik eklemek için takvim erişimi talep edilir. Takvim verileri tamamen cihazınızda yerel olarak kalır.</li>
+            <li><strong>Kişisel Hafıza (Kumaş Fiyatları, Tasarım Notları):</strong> Uygulama içinde kaydettiğiniz hafıza kayıtları yerel şifreli SQLite veritabanında tutulur ve cihazlarınız arasında sadece Apple'ın güvenli iCloud Key-Value Store altyapısıyla eşzamanlanır.</li>
+            <li><strong>Yapay Zekâ İşleme:</strong> İstekleriniz ve ilgili bağlam, güvenli HTTPS bağlantısı üzerinden Google Gemini API'sine anlık olarak iletilir ve yanıt alındıktan sonra işleme sonlanır. Model eğitimi için kullanılmaz.</li>
+        </ul>
+
+        <h2>2. Takip ve Üçüncü Taraf Paylaşımı</h2>
+        <p>Eris, <strong>hiçbir üçüncü taraf izleyici (tracker), analitik SDK veya reklam kodu içermez</strong>. Verileriniz asla satılmaz veya reklam amaçlı kullanılmaz.</p>
+
+        <h2>3. Sıfır-Kurulum (Zero-Setup) Mimarisi</h2>
+        <p>Uygulamayı kullanmak için herhangi bir hesap açmanız, e-posta vermeniz veya API anahtarı girmeniz gerekmez. Eris kutudan çıktığı anda kullanıma hazırdır.</p>
+
+        <h2>4. Güvenlik</h2>
+        <p>Tüm hassas veriler Apple Keychain güvenli kasasında saklanır. Ağ bağlantıları TLS 1.3 standardında şifrelenir.</p>
+
+        <h2>5. İletişim</h2>
+        <p>Gizlilik politikamızla ilgili tüm soru ve talepleriniz için bize ulaşabilirsiniz:<br>
+        📧 <strong>support@alfagolab.com</strong></p>
+
+        <div class="footer">
+            &copy; 2026 AlfaGo Lab. Tüm hakları saklıdır.
+        </div>
+    </div>
+</body>
+</html>

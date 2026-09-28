@@ -40,12 +40,16 @@ public final class ErisSyncService: @unchecked Sendable {
             let localMemories = ErisMemoryDatabase.shared.getAllMemories()
             let localIds = Set(localMemories.map { $0.id })
             
+            var hasNew = false
             for remote in remoteMemories {
                 if !localIds.contains(remote.id) {
-                    ErisMemoryDatabase.shared.saveMemory(remote)
+                    ErisMemoryDatabase.shared.saveMemoryInternal(remote)
+                    hasNew = true
                 }
             }
-            onSyncUpdated?()
+            if hasNew {
+                onSyncUpdated?()
+            }
         } catch {
             print("iCloud veri alma hatası: \(error)")
         }

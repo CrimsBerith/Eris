@@ -345,6 +345,7 @@ extern "C" {
 #pragma clang diagnostic ignored "-Watimport-in-framework-header"
 #endif
 @import AVFAudio;
+@import CoreLocation;
 @import ObjectiveC;
 #endif
 
@@ -367,6 +368,18 @@ extern "C" {
 #endif
 
 #if defined(__OBJC__)
+
+@class CLLocationManager;
+@class CLRegion;
+/// Bölüm 7 & 40 (“Hatırlatmalar & Proaktif Durumlar”) gereğince:
+/// Zaman, Coğrafi Konum (Geofence), Kişi, Hava Durumu Koşulu ve
+/// Etkinlik Öncesi Hazırlık Sürelerine dayalı çok boyutlu bağlamsal tetikleyici motoru.
+SWIFT_CLASS("_TtC8ErisCore27ErisContextualTriggerEngine")
+@interface ErisContextualTriggerEngine : NSObject <CLLocationManagerDelegate>
+- (nonnull instancetype)init SWIFT_UNAVAILABLE;
++ (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
+- (void)locationManager:(CLLocationManager * _Nonnull)manager didEnterRegion:(CLRegion * _Nonnull)region;
+@end
 
 @class AVSpeechSynthesizer;
 @class AVSpeechUtterance;

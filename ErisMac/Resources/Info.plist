@@ -2,9 +2,13 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+    <key>CFBundleExecutable</key>
+    <string>$(EXECUTABLE_NAME)</string>
     <key>CFBundleIdentifier</key>
-    <string>com.alfagolab.eris</string>
+    <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
     <key>CFBundleName</key>
+    <string>$(PRODUCT_NAME)</string>
+    <key>CFBundleDisplayName</key>
     <string>Eris</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
@@ -14,11 +18,15 @@
     <string>1</string>
     <key>LSMinimumSystemVersion</key>
     <string>14.0</string>
+    <key>LSApplicationCategoryType</key>
+    <string>public.app-category.productivity</string>
     <key>NSMicrophoneUsageDescription</key>
     <string>Eris ile sesli konuşmak ve komut vermek için mikrofon izni gereklidir.</string>
     <key>NSSpeechRecognitionUsageDescription</key>
     <string>Eris sesli komutlarınızı çözümlemek için konuşma tanıma özelliğini kullanır.</string>
     <key>NSCalendarsFullAccessUsageDescription</key>
+    <string>Eris takviminizi okumak ve onayınızla etkinlik oluşturmak için takvim erişimi ister.</string>
+    <key>NSCalendarsUsageDescription</key>
     <string>Eris takviminizi okumak ve onayınızla etkinlik oluşturmak için takvim erişimi ister.</string>
 </dict>
 </plist>

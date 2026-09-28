@@ -5,18 +5,66 @@ public final class KeychainManager: @unchecked Sendable {
     public static let shared = KeychainManager()
     private let service = "com.alfagolab.eris"
     private let apiKeyAccount = "gemini_api_key"
+    private let vapiApiKeyAccount = "vapi_api_key"
+    private let vapiAssistantIdAccount = "vapi_assistant_id"
     
     private init() {}
     
+    // MARK: - Gemini API Key
     public func saveApiKey(_ key: String) -> Bool {
-        guard let data = key.data(using: .utf8) else { return false }
-        
-        deleteApiKey()
+        saveGeneric(account: apiKeyAccount, value: key)
+    }
+    
+    /// Keychain'e kullanıcının/geliştiricinin elle girdiği özel bir override var mı kontrol eder
+    public func getCustomOverrideApiKey() -> String? {
+        getGeneric(account: apiKeyAccount)
+    }
+    
+    /// Aktif API anahtarını döner (Geliştirici anahtarı veya Keychain override)
+    public func getApiKey() -> String? {
+        let key = ErisAppConfig.activeApiKey
+        return key.isEmpty ? nil : key
+    }
+    
+    public func deleteApiKey() {
+        deleteGeneric(account: apiKeyAccount)
+    }
+    
+    // MARK: - Vapi.ai API Key
+    public func saveVapiApiKey(_ key: String) -> Bool {
+        saveGeneric(account: vapiApiKeyAccount, value: key)
+    }
+    
+    public func getVapiApiKey() -> String? {
+        getGeneric(account: vapiApiKeyAccount)
+    }
+    
+    public func deleteVapiApiKey() {
+        deleteGeneric(account: vapiApiKeyAccount)
+    }
+    
+    // MARK: - Vapi.ai Assistant ID
+    public func saveVapiAssistantId(_ id: String) -> Bool {
+        saveGeneric(account: vapiAssistantIdAccount, value: id)
+    }
+    
+    public func getVapiAssistantId() -> String? {
+        getGeneric(account: vapiAssistantIdAccount)
+    }
+    
+    public func deleteVapiAssistantId() {
+        deleteGeneric(account: vapiAssistantIdAccount)
+    }
+    
+    // MARK: - Generic Keychain Helpers
+    private func saveGeneric(account: String, value: String) -> Bool {
+        guard let data = value.data(using: .utf8) else { return false }
+        deleteGeneric(account: account)
         
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrService as String: service,
-            kSecAttrAccount as String: apiKeyAccount,
+            kSecAttrAccount as String: account,
             kSecValueData as String: data,
             kSecAttrAccessible as String: kSecAttrAccessibleAfterFirstUnlock
         ]
@@ -25,11 +73,11 @@ public final class KeychainManager: @unchecked Sendable {
         return status == errSecSuccess
     }
     
-    public func getApiKey() -> String? {
+    private func getGeneric(account: String) -> String? {
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrService as String: service,
-            kSecAttrAccount as String: apiKeyAccount,
+            kSecAttrAccount as String: account,
             kSecReturnData as String: true,
             kSecMatchLimit as String: kSecMatchLimitOne
         ]
@@ -43,11 +91,11 @@ public final class KeychainManager: @unchecked Sendable {
         return nil
     }
     
-    public func deleteApiKey() {
+    private func deleteGeneric(account: String) {
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrService as String: service,
-            kSecAttrAccount as String: apiKeyAccount
+            kSecAttrAccount as String: account
         ]
         SecItemDelete(query as CFDictionary)
     }

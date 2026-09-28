@@ -6,6 +6,7 @@ public struct Message: Identifiable, Codable, Equatable, Sendable {
     public let content: String
     public let timestamp: Date
     public let isAudioTranscript: Bool
+    public var plan: DecomposedPlan?
     
     public enum Role: String, Codable, Sendable {
         case user
@@ -14,12 +15,13 @@ public struct Message: Identifiable, Codable, Equatable, Sendable {
         case tool
     }
     
-    public init(id: UUID = UUID(), role: Role, content: String, timestamp: Date = Date(), isAudioTranscript: Bool = false) {
+    public init(id: UUID = UUID(), role: Role, content: String, timestamp: Date = Date(), isAudioTranscript: Bool = false, plan: DecomposedPlan? = nil) {
         self.id = id
         self.role = role
         self.content = content
         self.timestamp = timestamp
         self.isAudioTranscript = isAudioTranscript
+        self.plan = plan
     }
 }
 

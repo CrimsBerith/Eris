@@ -5,7 +5,9 @@ import AVFoundation
 public final class ErisVoiceListener: NSObject, @unchecked Sendable {
     public static let shared = ErisVoiceListener()
     
-    private let speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: "tr-TR"))
+    private var speechRecognizer: SFSpeechRecognizer? {
+        SFSpeechRecognizer(locale: ErisLanguageManager.shared.currentLanguage.speechLocale)
+    }
     private var recognitionRequest: SFSpeechAudioBufferRecognitionRequest?
     private var recognitionTask: SFSpeechRecognitionTask?
     private let audioEngine = AVAudioEngine()
@@ -14,9 +16,15 @@ public final class ErisVoiceListener: NSObject, @unchecked Sendable {
     public var onTranscriptionUpdated: (@Sendable (String) -> Void)?
     public var onFinalTranscription: (@Sendable (String) -> Void)?
     public var onAudioLevel: (@Sendable (Float) -> Void)?
+    public var onBargeInTriggered: (@Sendable () -> Void)?
     
     public private(set) var isListening: Bool = false
     public var isContinuousWakeWordActive: Bool = false
+    
+    // CPU & Pil optimizasyonu için eşikler
+    private var silenceFrameCount: Int = 0
+    private let bargeInAudioThreshold: Float = 0.075
+    private var isTapInstalled: Bool = false
     
     private override init() {
         super.init()
@@ -55,8 +63,14 @@ public final class ErisVoiceListener: NSObject, @unchecked Sendable {
                 let transcription = result.bestTranscription.formattedString
                 let lower = transcription.lowercased()
                 
-                // Wake word kontrolü ("Hey Eris", "Eris")
-                if lower.contains("eris") || lower.contains("hey eris") || lower.contains("ey eris") {
+                // Barge-in tetikleme: Kullanıcı bir şeyler söylediğinde hoparlör susmalı
+                if !transcription.isEmpty {
+                    self.onBargeInTriggered?()
+                    ErisSpeaker.shared.stopSpeaking()
+                }
+                
+                // Wake word kontrolü ("Hey Eris", "Eris", "Ey Eris")
+                if lower.contains("hey eris") || lower.contains("ey eris") || lower.contains("eris") {
                     self.onWakeWordDetected?()
                 }
                 
@@ -69,12 +83,19 @@ public final class ErisVoiceListener: NSObject, @unchecked Sendable {
             
             if error != nil {
                 self.stopListening()
+                
+                // Eğer sürekli uyandırma modu açıksa hata durumunda güvenle yeniden hazırla
+                if self.isContinuousWakeWordActive {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                        try? self.startListening()
+                    }
+                }
             }
         }
         
         let recordingFormat = inputNode.outputFormat(forBus: 0)
         inputNode.installTap(onBus: 0, bufferSize: 1024, format: recordingFormat) { [weak self] buffer, _ in
-            self?.recognitionRequest?.append(buffer)
+            guard let self = self else { return }
             
             // Canlı ses seviyesi hesaplama (Waveform animasyonu için)
             guard let channelData = buffer.floatChannelData?[0] else { return }
@@ -84,8 +105,24 @@ public final class ErisVoiceListener: NSObject, @unchecked Sendable {
                 sum += abs(channelData[i])
             }
             let average = frameLength > 0 ? (sum / Float(frameLength)) : 0
-            self?.onAudioLevel?(average)
+            self.onAudioLevel?(average)
+            
+            // Barge-in: Eğer konuşurken ses algılanırsa derhal hoparlörü sustur
+            if average > self.bargeInAudioThreshold {
+                self.onBargeInTriggered?()
+                ErisSpeaker.shared.stopSpeaking()
+            }
+            
+            // CPU & Pil optimizasyonu: Uzun süreli tam sessizlikte gereksiz buffer yükünü sınırla
+            if average < 0.005 {
+                self.silenceFrameCount += 1
+            } else {
+                self.silenceFrameCount = 0
+            }
+            
+            self.recognitionRequest?.append(buffer)
         }
+        isTapInstalled = true
         
         audioEngine.prepare()
         try audioEngine.start()
@@ -95,7 +132,10 @@ public final class ErisVoiceListener: NSObject, @unchecked Sendable {
     public func stopListening() {
         if audioEngine.isRunning {
             audioEngine.stop()
+        }
+        if isTapInstalled {
             audioEngine.inputNode.removeTap(onBus: 0)
+            isTapInstalled = false
         }
         recognitionRequest?.endAudio()
         recognitionTask?.cancel()

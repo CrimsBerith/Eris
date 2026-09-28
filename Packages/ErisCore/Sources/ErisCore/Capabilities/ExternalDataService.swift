@@ -46,10 +46,11 @@ public final class ExternalDataService: @unchecked Sendable {
     public var customSymbols: [String] = ["BIST100", "USDTRY", "EURTRY", "XAUUSD", "BTC"]
     public var marineLocation: String = "Kalamış / İstanbul"
     
+    private let urlSession = URLSession.shared
+    
     private init() {}
     
     public func getMarketSummary() -> [MarketItem] {
-        // Hazır izleme listesi (İleride canlı borsa gateway'iyle entegre edilebilir)
         return [
             MarketItem(symbol: "BIST100", name: "Borsa İstanbul", price: "9,840.50", change: "+%1.12", isPositive: true),
             MarketItem(symbol: "USDTRY", name: "Dolar / TL", price: "34.18", change: "+%0.08", isPositive: false),
@@ -70,5 +71,35 @@ public final class ExternalDataService: @unchecked Sendable {
             airTempCelsius: 23.0,
             warning: nil
         )
+    }
+    
+    // Web Araştırması (DuckDuckGo Instant Answer API)
+    // Tüm harici çıktılar `untrusted` kuralına tabidir
+    public func searchWebUntrusted(query: String) async -> String {
+        guard let encoded = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+              let url = URL(string: "https://api.duckduckgo.com/?q=\(encoded)&format=json&no_html=1&skip_disambig=1") else {
+            return "[UNTRUSTED_SEARCH]: Arama URL oluşturulamadı."
+        }
+        
+        do {
+            let (data, response) = try await urlSession.data(from: url)
+            guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+                return "[UNTRUSTED_SEARCH]: Arama servisi geçici olarak yanıt vermedi."
+            }
+            
+            if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any] {
+                let abstract = json["AbstractText"] as? String ?? ""
+                if !abstract.isEmpty {
+                    return "[UNTRUSTED_SEARCH]: \(abstract)"
+                }
+                
+                if let related = json["RelatedTopics"] as? [[String: Any]], let first = related.first, let text = first["Text"] as? String {
+                    return "[UNTRUSTED_SEARCH]: \(text)"
+                }
+            }
+            return "[UNTRUSTED_SEARCH]: Doğrudan sonuç bulunamadı."
+        } catch {
+            return "[UNTRUSTED_SEARCH]: Arama hatası: \(error.localizedDescription)"
+        }
     }
 }

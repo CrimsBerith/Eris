@@ -8,12 +8,18 @@
 
 /* Begin PBXBuildFile section */
 		13A8D96966BD08AA36498344 /* ErisCore in Frameworks */ = {isa = PBXBuildFile; productRef = EB1ED390E6697F24E39E763B /* ErisCore */; };
+		170ECECC75CEF04BABE23105 /* IOSChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A79A6E37B7056BB954720687 /* IOSChatView.swift */; };
 		18E5EA643FCED503074BCC74 /* ErisIOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B08AF4AB380BEF8C2487F03 /* ErisIOSApp.swift */; };
 		46B6A4C7B4052409EC5B6993 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 1BC93793130DA8E15E853B61 /* PrivacyInfo.xcprivacy */; };
 		820DACD3163FE3DB201B3EE7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13BE330CA8BBB2B43FC6846E /* Assets.xcassets */; };
 		90DC77746B7676CC77356B2D /* ErisCore in Frameworks */ = {isa = PBXBuildFile; productRef = 279EEED718B09BC238FED9D5 /* ErisCore */; };
 		A12F995F51212ED0114D991C /* ErisMacApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E6DA83FC9FD76E0AC172AB /* ErisMacApp.swift */; };
+		CAD84CA28B1F777D1567A840 /* IOSWidgetsDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F16014AE0D8CC37C73F380F /* IOSWidgetsDashboardView.swift */; };
+		A0F1B2C3D4E5F6A7B8C9D0E1 /* IOSChecklistsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1A2C3D4E5F6A7B8C9D0E1F2 /* IOSChecklistsView.swift */; };
+		CC0096C5BEDA456A4A9E9174 /* IOSMemoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38ED56F9E2EBF549D9A43FE /* IOSMemoryView.swift */; };
 		CE7616B6D46DDF83D92D4065 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = F7484BF2B7DC648785E92A91 /* PrivacyInfo.xcprivacy */; };
+		EA64D14CC80C4E1E8E2BC7A3 /* MacSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE41E5A290001B43D8732A13 /* MacSettingsView.swift */; };
+		F57065D6BFC13F26DAC6D668 /* IOSSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D23E05357DCA97CB487CF93A /* IOSSettingsView.swift */; };
 		FD2767ECAE4A8E85938C5975 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4507015B7C3BCB7600D9678B /* Assets.xcassets */; };
 		FD997E6C3E65658EB03C1661 /* MainWindowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91876E903B42D028E24F00A2 /* MainWindowView.swift */; };
 /* End PBXBuildFile section */
@@ -25,9 +31,15 @@
 		4507015B7C3BCB7600D9678B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6B08AF4AB380BEF8C2487F03 /* ErisIOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErisIOSApp.swift; sourceTree = "<group>"; };
 		72024849BA491CCF81D66903 /* ErisIOS.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = ErisIOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7F16014AE0D8CC37C73F380F /* IOSWidgetsDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IOSWidgetsDashboardView.swift; sourceTree = "<group>"; };
+		B1A2C3D4E5F6A7B8C9D0E1F2 /* IOSChecklistsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IOSChecklistsView.swift; sourceTree = "<group>"; };
 		8E21972562BBBE9DE56F743A /* ErisCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = ErisCore; path = Packages/ErisCore; sourceTree = SOURCE_ROOT; };
 		91876E903B42D028E24F00A2 /* MainWindowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainWindowView.swift; sourceTree = "<group>"; };
+		A38ED56F9E2EBF549D9A43FE /* IOSMemoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IOSMemoryView.swift; sourceTree = "<group>"; };
+		A79A6E37B7056BB954720687 /* IOSChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IOSChatView.swift; sourceTree = "<group>"; };
 		B5E6DA83FC9FD76E0AC172AB /* ErisMacApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErisMacApp.swift; sourceTree = "<group>"; };
+		CE41E5A290001B43D8732A13 /* MacSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacSettingsView.swift; sourceTree = "<group>"; };
+		D23E05357DCA97CB487CF93A /* IOSSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IOSSettingsView.swift; sourceTree = "<group>"; };
 		F7484BF2B7DC648785E92A91 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -78,10 +90,23 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		71B174220B04E9FB3A94405B /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				A79A6E37B7056BB954720687 /* IOSChatView.swift */,
+				A38ED56F9E2EBF549D9A43FE /* IOSMemoryView.swift */,
+				D23E05357DCA97CB487CF93A /* IOSSettingsView.swift */,
+				7F16014AE0D8CC37C73F380F /* IOSWidgetsDashboardView.swift */,
+				B1A2C3D4E5F6A7B8C9D0E1F2 /* IOSChecklistsView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		87857CA8D9E8ED713A5BF712 /* ErisMac */ = {
 			isa = PBXGroup;
 			children = (
 				FF254A32230177E855CAA932 /* Resources */,
+				EB6DEFF944F80B5C08D21E48 /* Views */,
 				B5E6DA83FC9FD76E0AC172AB /* ErisMacApp.swift */,
 				91876E903B42D028E24F00A2 /* MainWindowView.swift */,
 			);
@@ -92,6 +117,7 @@
 			isa = PBXGroup;
 			children = (
 				D7C75BB10720496AD71BF290 /* Resources */,
+				71B174220B04E9FB3A94405B /* Views */,
 				6B08AF4AB380BEF8C2487F03 /* ErisIOSApp.swift */,
 			);
 			path = ErisIOS;
@@ -104,6 +130,14 @@
 				1BC93793130DA8E15E853B61 /* PrivacyInfo.xcprivacy */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		EB6DEFF944F80B5C08D21E48 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				CE41E5A290001B43D8732A13 /* MacSettingsView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		FF254A32230177E855CAA932 /* Resources */ = {
@@ -219,6 +253,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A12F995F51212ED0114D991C /* ErisMacApp.swift in Sources */,
+				EA64D14CC80C4E1E8E2BC7A3 /* MacSettingsView.swift in Sources */,
 				FD997E6C3E65658EB03C1661 /* MainWindowView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -228,6 +263,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				18E5EA643FCED503074BCC74 /* ErisIOSApp.swift in Sources */,
+				170ECECC75CEF04BABE23105 /* IOSChatView.swift in Sources */,
+				CC0096C5BEDA456A4A9E9174 /* IOSMemoryView.swift in Sources */,
+				F57065D6BFC13F26DAC6D668 /* IOSSettingsView.swift in Sources */,
+				CAD84CA28B1F777D1567A840 /* IOSWidgetsDashboardView.swift in Sources */,
+				A0F1B2C3D4E5F6A7B8C9D0E1 /* IOSChecklistsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -240,6 +280,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGNING_ALLOWED = NO;
 				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_ENTITLEMENTS = ErisMac/Resources/ErisMac.entitlements;
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
 				ENABLE_HARDENED_RUNTIME = NO;
@@ -319,6 +360,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGNING_ALLOWED = NO;
 				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_ENTITLEMENTS = ErisIOS/Resources/ErisIOS.entitlements;
 				CODE_SIGN_IDENTITY = "-";
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = ErisIOS/Resources/Info.plist;
@@ -340,6 +382,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGNING_ALLOWED = NO;
 				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_ENTITLEMENTS = ErisMac/Resources/ErisMac.entitlements;
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
 				ENABLE_HARDENED_RUNTIME = NO;
@@ -362,6 +405,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGNING_ALLOWED = NO;
 				CODE_SIGNING_REQUIRED = NO;
+				CODE_SIGN_ENTITLEMENTS = ErisIOS/Resources/ErisIOS.entitlements;
 				CODE_SIGN_IDENTITY = "-";
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = ErisIOS/Resources/Info.plist;
