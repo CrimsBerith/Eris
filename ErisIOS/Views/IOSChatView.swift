@@ -324,14 +324,22 @@ struct IOSChatView: View {
         case .morningBriefing:
             appState.playMorningBriefing()
         case .quickNote:
-            appState.sendUserMessage(L10n.promptTakeNote)
+            withAnimation {
+                appState.selectedTab = .memory
+            }
         case .openLoops:
+            withAnimation {
+                appState.selectedTab = .widgets
+            }
             appState.sendUserMessage(L10n.promptListOpenLoops)
         case .livingLists:
             withAnimation {
                 appState.selectedTab = .checklists
             }
         case .habitsGoals:
+            withAnimation {
+                appState.selectedTab = .widgets
+            }
             appState.sendUserMessage(L10n.promptCheckHabits)
         }
     }
@@ -425,6 +433,13 @@ struct IOSAgentQuickSwitcherView: View {
 
 struct IOSChatBubble: View {
     let message: Message
+    @State private var isCopied: Bool = false
+    
+    private var formattedTime: String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm"
+        return formatter.string(from: message.timestamp)
+    }
     
     var body: some View {
         HStack {
@@ -446,20 +461,34 @@ struct IOSChatBubble: View {
                         .foregroundColor(ErisTheme.coldWhite)
                         .shadow(color: Color.black.opacity(0.2), radius: 5, y: 2)
                     
-                    if message.isAudioTranscript {
-                        HStack(spacing: 3) {
-                            Image(systemName: "waveform")
-                                .font(.system(size: 8))
-                            Text("Sesli")
-                                .font(.system(size: 8))
+                    HStack(spacing: 4) {
+                        if message.isAudioTranscript {
+                            HStack(spacing: 3) {
+                                Image(systemName: "waveform")
+                                    .font(.system(size: 8))
+                                Text("Sesli")
+                                    .font(.system(size: 8))
+                            }
+                            .foregroundColor(ErisTheme.sourceVoice.opacity(0.7))
                         }
-                        .foregroundColor(ErisTheme.sourceVoice.opacity(0.7))
-                        .padding(.trailing, 8)
+                        
+                        Text(formattedTime)
+                            .font(.system(size: 9))
+                            .foregroundColor(ErisTheme.coldGray.opacity(0.6))
+                    }
+                    .padding(.trailing, 6)
+                }
+                .contextMenu {
+                    Button(action: {
+                        UIPasteboard.general.string = message.content
+                        UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                    }) {
+                        Label("Kopyala", systemImage: "doc.on.doc")
                     }
                 }
             } else {
                 VStack(alignment: .leading, spacing: 4) {
-                    // ERIS Başlık Rozeti
+                    // ERIS Başlık Rozeti + Saat
                     HStack(spacing: 5) {
                         Image(systemName: "shield.fill")
                             .font(.system(size: 9))
@@ -467,8 +496,14 @@ struct IOSChatBubble: View {
                         Text("ERIS")
                             .font(.system(size: 9, weight: .bold))
                             .foregroundColor(ErisTheme.bronzeHighlight)
+                        
+                        Spacer()
+                        
+                        Text(formattedTime)
+                            .font(.system(size: 9))
+                            .foregroundColor(ErisTheme.coldGray.opacity(0.6))
                     }
-                    .padding(.leading, 14)
+                    .padding(.horizontal, 6)
                     
                     Text(message.content)
                         .font(.system(size: 14.5))
@@ -496,6 +531,67 @@ struct IOSChatBubble: View {
                             }
                         )
                         .padding(.top, 4)
+                    }
+                    
+                    // Alt Aksiyon Butonları (Kopyala & Dinle)
+                    HStack(spacing: 8) {
+                        Button(action: {
+                            UIPasteboard.general.string = message.content
+                            UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                            isCopied = true
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                isCopied = false
+                            }
+                        }) {
+                            HStack(spacing: 3) {
+                                Image(systemName: isCopied ? "checkmark" : "doc.on.doc")
+                                    .font(.system(size: 9))
+                                Text(isCopied ? "Kopyalandı" : "Kopyala")
+                                    .font(.system(size: 10, weight: .medium))
+                            }
+                            .foregroundColor(isCopied ? ErisTheme.listeningGreen : ErisTheme.coldGray)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 3.5)
+                            .background(Capsule().fill(Color.white.opacity(0.06)))
+                        }
+                        .buttonStyle(.plain)
+                        
+                        Button(action: {
+                            if ErisSpeaker.shared.isSpeaking {
+                                ErisSpeaker.shared.stopSpeaking()
+                            } else {
+                                ErisSpeaker.shared.speak(message.content)
+                            }
+                        }) {
+                            HStack(spacing: 3) {
+                                Image(systemName: "speaker.wave.2")
+                                    .font(.system(size: 9))
+                                Text("Dinle")
+                                    .font(.system(size: 10, weight: .medium))
+                            }
+                            .foregroundColor(ErisTheme.coldGray)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 3.5)
+                            .background(Capsule().fill(Color.white.opacity(0.06)))
+                        }
+                        .buttonStyle(.plain)
+                        
+                        Spacer()
+                    }
+                    .padding(.leading, 6)
+                    .padding(.top, 2)
+                }
+                .contextMenu {
+                    Button(action: {
+                        UIPasteboard.general.string = message.content
+                        UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                    }) {
+                        Label("Kopyala", systemImage: "doc.on.doc")
+                    }
+                    Button(action: {
+                        ErisSpeaker.shared.speak(message.content)
+                    }) {
+                        Label("Sesli Oku", systemImage: "speaker.wave.2")
                     }
                 }
                 

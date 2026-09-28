@@ -151,6 +151,10 @@ public final class ErisSpeaker: NSObject, AVSpeechSynthesizerDelegate, @unchecke
         speak(sample, tone: tone)
     }
     
+    public var isSpeaking: Bool {
+        synthesizer.isSpeaking
+    }
+    
     public func stopSpeaking() {
         if synthesizer.isSpeaking {
             synthesizer.stopSpeaking(at: .immediate)

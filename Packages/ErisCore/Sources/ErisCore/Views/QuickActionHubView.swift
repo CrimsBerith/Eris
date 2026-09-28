@@ -171,34 +171,80 @@ public struct ErisQuickActionHubView: View {
         self.onSelectPrompt = onSelectPrompt
     }
     
+    private var timeGreeting: String {
+        let hour = Calendar.current.component(.hour, from: Date())
+        switch hour {
+        case 5..<12: return "Günaydın"
+        case 12..<18: return "İyi Günler"
+        case 18..<23: return "İyi Akşamlar"
+        default: return "İyi Geceler"
+        }
+    }
+    
+    private var isDaytime: Bool {
+        let hour = Calendar.current.component(.hour, from: Date())
+        return hour >= 6 && hour < 20
+    }
+    
+    private var formattedDate: String {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "tr_TR")
+        formatter.dateFormat = "d MMMM EEEE"
+        return formatter.string(from: Date())
+    }
+    
+    private var weatherInfo: MarineWeatherInfo {
+        ExternalDataService.shared.getMarineWeather()
+    }
+    
+    private var totalMemoriesCount: Int {
+        ErisMemoryDatabase.shared.getAllMemories().count
+    }
+    
     public var body: some View {
         VStack(spacing: 16) {
-            // Karşılama Başlığı
-            VStack(spacing: 6) {
+            // Karşılama Başlığı & Canlı Durum
+            VStack(spacing: 8) {
                 ZStack {
                     Circle()
                         .fill(ErisTheme.bronzeHighlight.opacity(0.12))
-                        .frame(width: 54, height: 54)
+                        .frame(width: 52, height: 52)
                     
                     Image(systemName: "shield.checkered")
-                        .font(.system(size: 26))
+                        .font(.system(size: 24))
                         .foregroundColor(ErisTheme.bronzeHighlight)
                         .shadow(color: ErisTheme.bronzeHighlight.opacity(0.4), radius: 8)
                 }
                 
-                Text(L10n.howCanIHelp)
-                    .font(.system(size: 16, weight: .bold))
-                    .foregroundColor(ErisTheme.coldWhite)
-                
-                Text("Eris, gününüzü ve işlerinizi proaktif olarak organize eder.")
-                    .font(.system(size: 12))
-                    .foregroundColor(ErisTheme.coldGray)
-                    .multilineTextAlignment(.center)
+                VStack(spacing: 4) {
+                    Text("\(timeGreeting) • Eris Hazır")
+                        .font(.system(size: 17, weight: .bold))
+                        .foregroundColor(ErisTheme.coldWhite)
+                    
+                    HStack(spacing: 6) {
+                        Text(formattedDate)
+                            .font(.system(size: 11.5, weight: .medium))
+                            .foregroundColor(ErisTheme.coldGray)
+                        
+                        Text("•")
+                            .font(.system(size: 10))
+                            .foregroundColor(ErisTheme.coldGray.opacity(0.5))
+                        
+                        HStack(spacing: 3) {
+                            Image(systemName: "thermometer.medium")
+                                .font(.system(size: 9.5))
+                                .foregroundColor(Color(red: 0.5, green: 0.75, blue: 0.95))
+                            Text("\(Int(weatherInfo.airTempCelsius))°C • \(weatherInfo.location.components(separatedBy: ",").first ?? "İstanbul")")
+                                .font(.system(size: 11, weight: .medium))
+                                .foregroundColor(ErisTheme.coldWhite.opacity(0.85))
+                        }
+                    }
+                }
             }
-            .padding(.top, 8)
+            .padding(.top, 4)
             .padding(.horizontal, 16)
             
-            // Hero Kartı: Sabah Brifingi
+            // Hero Kartı: Dinamik Sabah / Gün Brifingi
             Button(action: {
                 onSelectAction(.morningBriefing)
             }) {
@@ -206,20 +252,22 @@ public struct ErisQuickActionHubView: View {
                     ZStack {
                         Circle()
                             .fill(LinearGradient(
-                                colors: [Color(red: 0.98, green: 0.75, blue: 0.28), Color(red: 0.95, green: 0.55, blue: 0.2)],
+                                colors: isDaytime
+                                    ? [Color(red: 0.98, green: 0.75, blue: 0.28), Color(red: 0.95, green: 0.55, blue: 0.2)]
+                                    : [Color(red: 0.45, green: 0.45, blue: 0.85), Color(red: 0.25, green: 0.25, blue: 0.65)],
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
                             ))
                             .frame(width: 44, height: 44)
                         
-                        Image(systemName: "sun.max.fill")
-                            .font(.system(size: 22))
-                            .foregroundColor(.black)
+                        Image(systemName: isDaytime ? "sun.max.fill" : "moon.stars.fill")
+                            .font(.system(size: 20))
+                            .foregroundColor(isDaytime ? .black : .white)
                     }
                     
                     VStack(alignment: .leading, spacing: 3) {
                         HStack {
-                            Text(L10n.morningBriefingTitle)
+                            Text(isDaytime ? L10n.morningBriefingTitle : "Günün Özeti & Brifing")
                                 .font(.system(size: 14, weight: .bold))
                                 .foregroundColor(ErisTheme.coldWhite)
                             
@@ -231,14 +279,14 @@ public struct ErisQuickActionHubView: View {
                                 Text("Dinle")
                                     .font(.system(size: 10, weight: .bold))
                             }
-                            .foregroundColor(.black)
+                            .foregroundColor(isDaytime ? .black : .white)
                             .padding(.horizontal, 8)
                             .padding(.vertical, 3)
-                            .background(Capsule().fill(Color(red: 0.98, green: 0.75, blue: 0.28)))
+                            .background(Capsule().fill(isDaytime ? Color(red: 0.98, green: 0.75, blue: 0.28) : Color(red: 0.45, green: 0.45, blue: 0.85)))
                         }
                         
-                        Text(L10n.morningBriefingSubtitle)
-                            .font(.system(size: 11.5))
+                        Text("\(Int(weatherInfo.airTempCelsius))°C • \(openLoopsEngine.pendingCount) açık iş • \(checklistEngine.checklists.count) liste • Dinlemek için dokunun")
+                            .font(.system(size: 11))
                             .foregroundColor(ErisTheme.coldGray)
                             .lineLimit(1)
                     }
@@ -249,7 +297,7 @@ public struct ErisQuickActionHubView: View {
                         .fill(Color.white.opacity(0.05))
                         .overlay(
                             RoundedRectangle(cornerRadius: 16)
-                                .stroke(Color(red: 0.98, green: 0.75, blue: 0.28).opacity(0.35), lineWidth: 0.8)
+                                .stroke((isDaytime ? Color(red: 0.98, green: 0.75, blue: 0.28) : Color(red: 0.45, green: 0.45, blue: 0.85)).opacity(0.35), lineWidth: 0.8)
                         )
                 )
             }
@@ -283,7 +331,7 @@ public struct ErisQuickActionHubView: View {
                     icon: "brain.head.profile",
                     color: ErisTheme.categoryFabric,
                     title: L10n.quickNoteTitle,
-                    badge: "Kasa",
+                    badge: "\(totalMemoriesCount) Kayıt",
                     description: "Önemli bilgileri kaydet",
                     action: { onSelectAction(.quickNote) }
                 )

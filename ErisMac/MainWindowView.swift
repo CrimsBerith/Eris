@@ -203,10 +203,12 @@ struct MainWindowView: View {
                                     case .quickNote:
                                         showVaultSheet = true
                                     case .openLoops:
+                                        sidebarTab = .tasks
                                         appState.sendUserMessage(L10n.promptListOpenLoops)
                                     case .livingLists:
                                         showChecklistsSheet = true
                                     case .habitsGoals:
+                                        sidebarTab = .tasks
                                         appState.sendUserMessage(L10n.promptCheckHabits)
                                     }
                                 },
@@ -895,34 +897,61 @@ struct MainWindowView: View {
 // Glassmorphism Mesaj Baloncuğu
 struct GlassMessageBubble: View {
     let message: Message
+    @State private var isCopied: Bool = false
+    @State private var isHovering: Bool = false
+    
+    private var formattedTime: String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm"
+        return formatter.string(from: message.timestamp)
+    }
     
     var body: some View {
         HStack {
             if message.role == .user {
                 Spacer(minLength: 40)
-                Text(message.content)
-                    .font(.system(size: 13.5))
-                    .padding(13)
-                    .background(
-                        RoundedRectangle(cornerRadius: 16)
-                            .fill(
-                                LinearGradient(
-                                    colors: [
-                                        ErisTheme.graphiteSurface,
-                                        ErisTheme.graphiteLight
-                                    ],
-                                    startPoint: .topLeading,
-                                    endPoint: .bottomTrailing
+                VStack(alignment: .trailing, spacing: 4) {
+                    Text(message.content)
+                        .font(.system(size: 13.5))
+                        .padding(13)
+                        .background(
+                            RoundedRectangle(cornerRadius: 16)
+                                .fill(
+                                    LinearGradient(
+                                        colors: [
+                                            ErisTheme.graphiteSurface,
+                                            ErisTheme.graphiteLight
+                                        ],
+                                        startPoint: .topLeading,
+                                        endPoint: .bottomTrailing
+                                    )
                                 )
-                            )
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 16)
-                                    .stroke(ErisTheme.bronzeAccent.opacity(0.28), lineWidth: 0.8)
-                            )
-                    )
-                    .foregroundColor(ErisTheme.coldWhite)
-                    .shadow(color: Color.black.opacity(0.25), radius: 5, y: 2)
-                    .frame(maxWidth: 580, alignment: .trailing)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 16)
+                                        .stroke(ErisTheme.bronzeAccent.opacity(0.28), lineWidth: 0.8)
+                                )
+                        )
+                        .foregroundColor(ErisTheme.coldWhite)
+                        .shadow(color: Color.black.opacity(0.25), radius: 5, y: 2)
+                    
+                    HStack(spacing: 4) {
+                        if message.isAudioTranscript {
+                            Image(systemName: "waveform")
+                                .font(.system(size: 8))
+                                .foregroundColor(ErisTheme.sourceVoice.opacity(0.8))
+                        }
+                        Text(formattedTime)
+                            .font(.system(size: 9))
+                            .foregroundColor(ErisTheme.coldGray.opacity(0.7))
+                    }
+                    .padding(.trailing, 4)
+                }
+                .frame(maxWidth: 580, alignment: .trailing)
+                .contextMenu {
+                    Button(action: { copyToClipboard(message.content) }) {
+                        Label("Kopyala", systemImage: "doc.on.doc")
+                    }
+                }
             } else {
                 VStack(alignment: .leading, spacing: 6) {
                     HStack(spacing: 6) {
@@ -932,6 +961,12 @@ struct GlassMessageBubble: View {
                         Text("ERIS")
                             .font(.system(size: 10, weight: .bold))
                             .foregroundColor(ErisTheme.bronzeHighlight)
+                        
+                        Spacer()
+                        
+                        Text(formattedTime)
+                            .font(.system(size: 9))
+                            .foregroundColor(ErisTheme.coldGray.opacity(0.6))
                     }
                     
                     Text(message.content)
@@ -951,6 +986,55 @@ struct GlassMessageBubble: View {
                         )
                         .padding(.top, 6)
                     }
+                    
+                    // Kolay Eylem Çubuğu: Kopyala & Seslendir
+                    HStack(spacing: 8) {
+                        Button(action: {
+                            copyToClipboard(message.content)
+                            isCopied = true
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                isCopied = false
+                            }
+                        }) {
+                            HStack(spacing: 4) {
+                                Image(systemName: isCopied ? "checkmark" : "doc.on.doc")
+                                    .font(.system(size: 9))
+                                Text(isCopied ? "Kopyalandı" : "Kopyala")
+                                    .font(.system(size: 9.5, weight: .medium))
+                            }
+                            .foregroundColor(isCopied ? ErisTheme.listeningGreen : ErisTheme.coldGray)
+                            .padding(.horizontal, 7)
+                            .padding(.vertical, 3)
+                            .background(Capsule().fill(Color.white.opacity(0.06)))
+                        }
+                        .buttonStyle(.plain)
+                        .help("Metni Panoya Kopyala")
+                        
+                        Button(action: {
+                            if ErisSpeaker.shared.isSpeaking {
+                                ErisSpeaker.shared.stopSpeaking()
+                            } else {
+                                ErisSpeaker.shared.speak(message.content)
+                            }
+                        }) {
+                            HStack(spacing: 4) {
+                                Image(systemName: "speaker.wave.2")
+                                    .font(.system(size: 9))
+                                Text("Seslendir")
+                                    .font(.system(size: 9.5, weight: .medium))
+                            }
+                            .foregroundColor(ErisTheme.coldGray)
+                            .padding(.horizontal, 7)
+                            .padding(.vertical, 3)
+                            .background(Capsule().fill(Color.white.opacity(0.06)))
+                        }
+                        .buttonStyle(.plain)
+                        .help("Cevabı Seslendir / Durdur")
+                        
+                        Spacer()
+                    }
+                    .padding(.top, 3)
+                    .opacity(isHovering || isCopied ? 1.0 : 0.5)
                 }
                 .padding(13)
                 .background(
@@ -963,9 +1047,24 @@ struct GlassMessageBubble: View {
                 )
                 .shadow(color: ErisTheme.bronzeHighlight.opacity(0.08), radius: 8, y: 2)
                 .frame(maxWidth: 620, alignment: .leading)
+                .onHover { isHovering = $0 }
+                .contextMenu {
+                    Button(action: { copyToClipboard(message.content) }) {
+                        Label("Kopyala", systemImage: "doc.on.doc")
+                    }
+                    Button(action: { ErisSpeaker.shared.speak(message.content) }) {
+                        Label("Seslendir", systemImage: "speaker.wave.2")
+                    }
+                }
                 Spacer(minLength: 40)
             }
         }
+    }
+    
+    private func copyToClipboard(_ text: String) {
+        let pasteboard = NSPasteboard.general
+        pasteboard.clearContents()
+        pasteboard.setString(text, forType: .string)
     }
 }
 
