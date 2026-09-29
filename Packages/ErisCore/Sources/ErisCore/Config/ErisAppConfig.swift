@@ -49,4 +49,35 @@ public struct ErisAppConfig: Sendable {
     public static var isConfigured: Bool {
         return !activeApiKey.isEmpty
     }
+    
+    // MARK: - Neural AI Voice (OpenAI TTS & Stüdyo Kalitesinde İnsan Sesi)
+    
+    /// Geliştirici Tarafından Sağlanan OpenAI API Anahtarı (Opsiyonel — Stüdyo kalitesinde gerçek insan sesi için)
+    public static var developerOpenAIApiKey: String = ""
+    
+    /// Aktif OpenAI API Anahtarı (Keychain override > Kod içi anahtar > Info.plist > Ortam değişkeni)
+    public static var activeOpenAIApiKey: String {
+        if let customKey = KeychainManager.shared.getOpenAIApiKey(),
+           !customKey.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            return customKey.trimmingCharacters(in: .whitespacesAndNewlines)
+        }
+        let trimmedDevKey = developerOpenAIApiKey.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !trimmedDevKey.isEmpty {
+            return trimmedDevKey
+        }
+        if let plistKey = Bundle.main.object(forInfoDictionaryKey: "OPENAI_API_KEY") as? String,
+           !plistKey.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            return plistKey.trimmingCharacters(in: .whitespacesAndNewlines)
+        }
+        if let envKey = ProcessInfo.processInfo.environment["OPENAI_API_KEY"],
+           !envKey.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            return envKey.trimmingCharacters(in: .whitespacesAndNewlines)
+        }
+        return ""
+    }
+    
+    /// Stüdyo kalitesinde nöral ses motorunun kullanılabilir durumda olup olmadığını belirtir.
+    public static var isNeuralVoiceAvailable: Bool {
+        return !activeOpenAIApiKey.isEmpty
+    }
 }

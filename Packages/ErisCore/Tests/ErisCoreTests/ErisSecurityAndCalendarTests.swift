@@ -86,5 +86,37 @@ final class ErisSecurityAndCalendarTests: XCTestCase {
         limiter.resetForTesting()
         XCTAssertTrue(limiter.canMakeRequest().allowed)
     }
+    
+    // MARK: - Konuşma Metin Temizliği (TTS Sanitizer)
+    func testTextSanitizerForSpeech() {
+        let raw = """
+        ### 🎙️ Günün Brifingi
+        • **Kumaş Fiyatı:** İpek saten metre başına 450 TL.
+        - Detaylar için: https://alfagolab.com/test
+        ```swift
+        print("kod")
+        ```
+        [NOT: Onaylandı] Hazırız!
+        """
+        
+        let cleaned = ErisSpeaker.cleanTextForSpeech(raw)
+        
+        // Emojiler temizlenmeli
+        XCTAssertFalse(cleaned.contains("🎙️"))
+        // Markdown başlık işareti temizlenmeli
+        XCTAssertFalse(cleaned.contains("###"))
+        // Kalın işaretleri temizlenmeli
+        XCTAssertFalse(cleaned.contains("**"))
+        // URL temizlenmeli
+        XCTAssertFalse(cleaned.contains("https://"))
+        // Kod bloğu temizlenmeli
+        XCTAssertFalse(cleaned.contains("print(\"kod\")"))
+        // Sistem etiketi temizlenmeli
+        XCTAssertFalse(cleaned.contains("[NOT: Onaylandı]"))
+        // Asıl metin korunmalı
+        XCTAssertTrue(cleaned.contains("Günün Brifingi"))
+        XCTAssertTrue(cleaned.contains("Kumaş Fiyatı"))
+        XCTAssertTrue(cleaned.contains("Hazırız!"))
+    }
 }
 

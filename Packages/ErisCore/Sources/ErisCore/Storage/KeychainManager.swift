@@ -5,6 +5,7 @@ public final class KeychainManager: @unchecked Sendable {
     public static let shared = KeychainManager()
     private let service = "com.alfagolab.eris"
     private let apiKeyAccount = "gemini_api_key"
+    private let openAIApiKeyAccount = "openai_api_key"
     private let vapiApiKeyAccount = "vapi_api_key"
     private let vapiAssistantIdAccount = "vapi_assistant_id"
     
@@ -28,6 +29,19 @@ public final class KeychainManager: @unchecked Sendable {
     
     public func deleteApiKey() {
         deleteGeneric(account: apiKeyAccount)
+    }
+    
+    // MARK: - OpenAI TTS (Neural AI Voice) API Key
+    public func saveOpenAIApiKey(_ key: String) -> Bool {
+        saveGeneric(account: openAIApiKeyAccount, value: key)
+    }
+    
+    public func getOpenAIApiKey() -> String? {
+        getGeneric(account: openAIApiKeyAccount)
+    }
+    
+    public func deleteOpenAIApiKey() {
+        deleteGeneric(account: openAIApiKeyAccount)
     }
     
     // MARK: - Vapi.ai API Key

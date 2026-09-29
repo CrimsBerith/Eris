@@ -95,6 +95,21 @@ struct GeneralSettingsTab: View {
                         }
                     )
                 }
+                
+                HStack(spacing: 8) {
+                    Image(systemName: ErisAppConfig.isNeuralVoiceAvailable ? "waveform.badge.sparkles" : "waveform")
+                        .foregroundColor(ErisTheme.bronzeHighlight)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(ErisAppConfig.isNeuralVoiceAvailable ? "Nöral Stüdyo Sesi Aktif (OpenAI TTS)" : "Apple Gelişmiş Yerel Ses Motoru")
+                            .font(.caption).bold()
+                        Text(ErisAppConfig.isNeuralVoiceAvailable
+                            ? "Eris stüdyo kalitesinde, nefes alan gerçek insan tonlamasıyla konuşuyor."
+                            : "Mac'inizde en yüksek ses doğallığı için: Sistem Ayarları > Erişilebilirlik > Seslendirilen İçerik > Sistem Sesi > Türkçe bölümünden 'Yelda (Gelişmiş / Premium)' sesini indirebilirsiniz.")
+                            .font(.system(size: 10.5))
+                            .foregroundColor(.secondary)
+                    }
+                }
+                .padding(.vertical, 4)
             }
             
             Section(header: Text("Etkileşim & Dinleme").font(.headline)) {
@@ -558,6 +573,7 @@ struct EditModuleSheetView: View {
 struct ModelApiSettingsTab: View {
     @ObservedObject var appState: ErisMacState
     @State private var customApiKey: String = KeychainManager.shared.getCustomOverrideApiKey() ?? ""
+    @State private var customOpenAIApiKey: String = KeychainManager.shared.getOpenAIApiKey() ?? ""
     @State private var savedMessage: String = ""
     @State private var showDeveloperSection: Bool = false
     
@@ -654,6 +670,36 @@ struct ModelApiSettingsTab: View {
                                     KeychainManager.shared.deleteApiKey()
                                     customApiKey = ""
                                     savedMessage = "Yerleşik geliştirici anahtarına dönüldü."
+                                }
+                                .buttonStyle(.bordered)
+                                .font(.caption)
+                            }
+                        }
+                        
+                        Divider().padding(.vertical, 4)
+                        
+                        Text("Stüdyo Kalitesinde İnsan Sesi (OpenAI TTS):")
+                            .font(.caption2)
+                            .foregroundColor(ErisTheme.coldGray)
+                        
+                        SecureField("OpenAI API Anahtarı (Opsiyonel)", text: $customOpenAIApiKey)
+                            .textFieldStyle(.roundedBorder)
+                        
+                        HStack {
+                            Button("Nöral Sesi Kaydet") {
+                                if KeychainManager.shared.saveOpenAIApiKey(customOpenAIApiKey) {
+                                    savedMessage = "OpenAI TTS anahtarı kaydedildi. Nöral ses aktif!"
+                                }
+                            }
+                            .buttonStyle(.borderedProminent)
+                            .tint(ErisTheme.bronzeHighlight)
+                            .font(.caption)
+                            
+                            if !customOpenAIApiKey.isEmpty {
+                                Button("Kaldır") {
+                                    KeychainManager.shared.deleteOpenAIApiKey()
+                                    customOpenAIApiKey = ""
+                                    savedMessage = "Nöral ses kaldırıldı. Apple yerel sesine dönüldü."
                                 }
                                 .buttonStyle(.bordered)
                                 .font(.caption)

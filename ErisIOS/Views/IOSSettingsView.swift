@@ -10,6 +10,7 @@ import ErisCore
 struct IOSSettingsContentView: View {
     @EnvironmentObject var appState: ErisIOSState
     @State private var customApiKey: String = KeychainManager.shared.getCustomOverrideApiKey() ?? ""
+    @State private var customOpenAIApiKey: String = KeychainManager.shared.getOpenAIApiKey() ?? ""
     @State private var showDeveloperOptions: Bool = false
     @State private var savedNotice: String = ""
     @State private var editingModule: ErisExpertiseModule? = nil
@@ -133,6 +134,28 @@ struct IOSSettingsContentView: View {
                             Divider().background(Color.white.opacity(0.06))
                         }
                     }
+                    
+                    Divider().background(Color.white.opacity(0.06))
+                    
+                    // Doğallık & Ses Motoru Bilgisi
+                    VStack(alignment: .leading, spacing: 6) {
+                        HStack(spacing: 6) {
+                            Image(systemName: ErisAppConfig.isNeuralVoiceAvailable ? "waveform.badge.sparkles" : "waveform")
+                                .foregroundColor(ErisTheme.bronzeHighlight)
+                                .font(.caption)
+                            Text(ErisAppConfig.isNeuralVoiceAvailable ? "Nöral Stüdyo Sesi Aktif (OpenAI TTS)" : "Apple Gelişmiş Yerel Ses Motoru")
+                                .font(.caption).bold()
+                                .foregroundColor(ErisTheme.coldWhite)
+                        }
+                        
+                        Text(ErisAppConfig.isNeuralVoiceAvailable
+                            ? "Eris stüdyo kalitesinde, nefes alan gerçek insan tonlamasıyla konuşuyor."
+                            : "En yüksek yerel ses kalitesi için: iOS Ayarları > Erişilebilirlik > Seslendirilen İçerik > Sesler > Türkçe bölümünden 'Yelda (Gelişmiş)' sesini indirebilirsiniz.")
+                            .font(.system(size: 11))
+                            .foregroundColor(ErisTheme.coldGray)
+                            .lineSpacing(2)
+                    }
+                    .padding(.top, 4)
                 }
                 .padding(16)
                 .background(
@@ -235,6 +258,44 @@ struct IOSSettingsContentView: View {
                                 Text(savedNotice)
                                     .font(.caption2)
                                     .foregroundColor(ErisTheme.listeningGreen)
+                            }
+                            
+                            Divider().background(Color.white.opacity(0.06)).padding(.vertical, 4)
+                            
+                            Text("Stüdyo Kalitesinde İnsan Sesi (OpenAI TTS):")
+                                .font(.caption2)
+                                .foregroundColor(ErisTheme.coldGray)
+                            
+                            SecureField("OpenAI API Anahtarı (Opsiyonel)", text: $customOpenAIApiKey)
+                                .padding(10)
+                                .background(RoundedRectangle(cornerRadius: 8).fill(Color.white.opacity(0.06)))
+                                .foregroundColor(ErisTheme.coldWhite)
+                            
+                            HStack {
+                                Button(action: {
+                                    if KeychainManager.shared.saveOpenAIApiKey(customOpenAIApiKey) {
+                                        savedNotice = "OpenAI TTS anahtarı kaydedildi. Nöral ses aktif!"
+                                    }
+                                }) {
+                                    Text("Nöral Sesi Kaydet")
+                                        .font(.caption).bold()
+                                        .foregroundColor(.black)
+                                        .padding(.horizontal, 14)
+                                        .padding(.vertical, 6)
+                                        .background(Capsule().fill(ErisTheme.bronzeHighlight))
+                                }
+                                
+                                if !customOpenAIApiKey.isEmpty {
+                                    Button(action: {
+                                        KeychainManager.shared.deleteOpenAIApiKey()
+                                        customOpenAIApiKey = ""
+                                        savedNotice = "Nöral ses kaldırıldı. Apple yerel sesine dönüldü."
+                                    }) {
+                                        Text("Kaldır")
+                                            .font(.caption)
+                                            .foregroundColor(ErisTheme.coldGray)
+                                    }
+                                }
                             }
                         }
                         .padding(.top, 6)

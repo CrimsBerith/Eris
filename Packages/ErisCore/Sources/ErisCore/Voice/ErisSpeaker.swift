@@ -24,23 +24,25 @@ public enum ErisVoiceTone: String, Codable, CaseIterable, Sendable, Identifiable
         }
     }
     
+    /// Doğal insan frekansını bozmayan, metalik robot efektini engelleyen perde çarpanı (0.95 - 1.03)
     public var pitchMultiplier: Float {
         switch self {
-        case .derinBariton: return 0.72
-        case .tokErkek: return 0.82
-        case .minimalistDirekt: return 0.88
-        case .sicakKadin: return 0.96
-        case .dinamikPartner: return 1.02
+        case .derinBariton: return 0.95
+        case .tokErkek: return 0.98
+        case .minimalistDirekt: return 1.00
+        case .sicakKadin: return 1.01
+        case .dinamikPartner: return 1.03
         }
     }
     
+    /// Doğal nefes ve duraklama aralığında konuşma hızı çarpanı
     public var rateMultiplier: Float {
         switch self {
-        case .derinBariton: return 0.88
-        case .tokErkek: return 0.92
-        case .minimalistDirekt: return 0.96
+        case .derinBariton: return 0.90
+        case .tokErkek: return 0.93
+        case .minimalistDirekt: return 0.98
         case .sicakKadin: return 0.95
-        case .dinamikPartner: return 1.03
+        case .dinamikPartner: return 1.02
         }
     }
     
@@ -87,13 +89,77 @@ public final class ErisSpeaker: NSObject, AVSpeechSynthesizerDelegate, @unchecke
         set { selectedTone = newValue == .female ? .sicakKadin : .tokErkek }
     }
     
+    /// Nöral ses (OpenAI TTS) kullanılabilir olduğunda aktif olsun mu?
+    public var useNeuralVoiceIfAvailable: Bool {
+        get { UserDefaults.standard.object(forKey: "eris_use_neural_voice") as? Bool ?? true }
+        set { UserDefaults.standard.set(newValue, forKey: "eris_use_neural_voice") }
+    }
+    
     public var onSpeakingFinished: (@Sendable () -> Void)?
     public var onSpeakingStarted: (@Sendable () -> Void)?
     
     private override init() {
         super.init()
         synthesizer.delegate = self
+        
+        // Nöral ses motoru olaylarını ErisSpeaker delegasyonuna bağla
+        ErisNeuralSpeaker.shared.onSpeakingStarted = { [weak self] in
+            self?.onSpeakingStarted?()
+        }
+        ErisNeuralSpeaker.shared.onSpeakingFinished = { [weak self] in
+            self?.onSpeakingFinished?()
+        }
     }
+    
+    // MARK: - Metin Temizliği (Markdown, Kod, Emoji & Teknik Simgeleri Ayıklama)
+    
+    /// Konuşma motorunun takılmadan, doğal bir insan gibi akıcı okuması için metni arındırır.
+    public static func cleanTextForSpeech(_ text: String) -> String {
+        var clean = text
+        
+        // 1. Kod bloklarını temizle (```...``` ve `...`)
+        clean = clean.replacingOccurrences(of: #"(?s)```.*?```"#, with: " ", options: .regularExpression)
+        clean = clean.replacingOccurrences(of: #"`.*?`"#, with: " ", options: .regularExpression)
+        
+        // 2. URL'leri temizle (http:// / https://)
+        clean = clean.replacingOccurrences(of: #"https?://\S+"#, with: " ", options: .regularExpression)
+        
+        // 3. Markdown başlık işaretlerini kaldır (### Başlık)
+        clean = clean.replacingOccurrences(of: #"(?m)^#{1,6}\s*"#, with: " ", options: .regularExpression)
+        
+        // 4. Markdown kalın ve italik işaretlerini kaldır (**metin**, *metin*)
+        clean = clean.replacingOccurrences(of: #"\*{1,3}(.*?)\*{1,3}"#, with: "$1", options: .regularExpression)
+        clean = clean.replacingOccurrences(of: #"_{1,3}(.*?)_{1,3}"#, with: "$1", options: .regularExpression)
+        clean = clean.replacingOccurrences(of: #"~{2}(.*?)~{2}"#, with: "$1", options: .regularExpression)
+        
+        // 5. Madde ve numaralandırma sembollerini kaldır (•, -, *, 1.)
+        clean = clean.replacingOccurrences(of: #"(?m)^\s*[\•\-\*]\s+"#, with: " ", options: .regularExpression)
+        clean = clean.replacingOccurrences(of: #"(?m)^\s*\d+[\.\)]\s+"#, with: " ", options: .regularExpression)
+        
+        // 6. Sistem etiketlerini ve parantez içi teknik meta verileri kaldır
+        clean = clean.replacingOccurrences(of: #"\[.*?\]"#, with: " ", options: .regularExpression)
+        
+        // 7. Emojileri temizle (TTS'in garip kelimeler söylemesini engeller)
+        clean = clean.unicodeScalars.filter { scalar in
+            if scalar.properties.isEmoji { return false }
+            if scalar.value == 0xFE0F || scalar.value == 0xFE0E { return false }
+            if (scalar.value >= 0x1F300 && scalar.value <= 0x1FAFF) || (scalar.value >= 0x2600 && scalar.value <= 0x27BF) {
+                return false
+            }
+            return true
+        }.reduce("") { $0 + String($1) }
+        
+        // 8. Fazla boşlukları ve noktalama yığılmalarını düzelt
+        clean = clean.replacingOccurrences(of: #"\s+"#, with: " ", options: .regularExpression)
+        clean = clean.replacingOccurrences(of: #"\.{2,}"#, with: ".", options: .regularExpression)
+        clean = clean.replacingOccurrences(of: #"\?{2,}"#, with: "?", options: .regularExpression)
+        clean = clean.replacingOccurrences(of: #"\!{2,}"#, with: "!", options: .regularExpression)
+        
+        clean = clean.trimmingCharacters(in: .whitespacesAndNewlines)
+        return clean.isEmpty ? text : clean
+    }
+    
+    // MARK: - Seslendirme Giriş Noktaları
     
     public func speak(_ text: String, language: String? = nil) {
         let activeLang = language ?? ErisLanguageManager.shared.currentLanguage.bcp47Locale
@@ -103,6 +169,31 @@ public final class ErisSpeaker: NSObject, AVSpeechSynthesizerDelegate, @unchecke
     public func speak(_ text: String, tone: ErisVoiceTone, language: String? = nil) {
         stopSpeaking()
         
+        let cleanedText = Self.cleanTextForSpeech(text)
+        guard !cleanedText.isEmpty else { return }
+        
+        // MARK: 1. Nöral AI Ses (OpenAI TTS) Kontrolü — Varsa stüdyo kalitesinde çal
+        if useNeuralVoiceIfAvailable && ErisAppConfig.isNeuralVoiceAvailable {
+            Task { [weak self] in
+                guard let self = self else { return }
+                let played = await ErisNeuralSpeaker.shared.speak(text: cleanedText, tone: tone)
+                if !played {
+                    // Nöral ses ağ hatası verirse, yerel Apple TTS ile devam et (fallback)
+                    await MainActor.run {
+                        self.speakNative(cleanedText, tone: tone, language: language)
+                    }
+                }
+            }
+            return
+        }
+        
+        // MARK: 2. Optimize Edilmiş Apple Yerel Motoru
+        speakNative(cleanedText, tone: tone, language: language)
+    }
+    
+    // MARK: - Apple Yerel TTS (Doğal İnsan Perdesi & Gelişmiş Ses Seçimi)
+    
+    private func speakNative(_ text: String, tone: ErisVoiceTone, language: String? = nil) {
         let targetLanguage = language ?? ErisLanguageManager.shared.currentLanguage.bcp47Locale
         let utterance = AVSpeechUtterance(string: text)
         
@@ -111,11 +202,13 @@ public final class ErisSpeaker: NSObject, AVSpeechSynthesizerDelegate, @unchecke
             $0.language.lowercased().starts(with: langPrefix)
         }
         
+        // Cinsiyet ve karakter eşleşmesi
         var candidateVoices = matchingVoices.filter { voice in
+            let nameLower = voice.name.lowercased()
             if tone.isFemalePreferred {
-                return voice.gender == .female || voice.name.lowercased().contains("female") || voice.name.lowercased().contains("yelda") || voice.name.lowercased().contains("samantha") || voice.name.lowercased().contains("karen")
+                return voice.gender == .female || nameLower.contains("female") || nameLower.contains("yelda") || nameLower.contains("siri")
             } else {
-                return voice.gender == .male || voice.name.lowercased().contains("male") || voice.name.lowercased().contains("cem") || voice.name.lowercased().contains("daniel") || voice.name.lowercased().contains("alex")
+                return voice.gender == .male || nameLower.contains("male") || nameLower.contains("cem") || nameLower.contains("daniel") || nameLower.contains("siri")
             }
         }
         
@@ -123,8 +216,13 @@ public final class ErisSpeaker: NSObject, AVSpeechSynthesizerDelegate, @unchecke
             candidateVoices = matchingVoices
         }
         
-        // Premium / Enhanced kaliteye öncelik ver
+        // Siri > Premium > Enhanced > Default sıralaması
         let sortedVoices = candidateVoices.sorted { v1, v2 in
+            let v1IsSiri = v1.name.lowercased().contains("siri") ? 1 : 0
+            let v2IsSiri = v2.name.lowercased().contains("siri") ? 1 : 0
+            if v1IsSiri != v2IsSiri {
+                return v1IsSiri > v2IsSiri
+            }
             if #available(macOS 13.0, iOS 16.0, *) {
                 return v1.quality.rawValue > v2.quality.rawValue
             }
@@ -137,10 +235,12 @@ public final class ErisSpeaker: NSObject, AVSpeechSynthesizerDelegate, @unchecke
             utterance.voice = AVSpeechSynthesisVoice(language: targetLanguage)
         }
         
-        // Seçilen tonun karakteristik parametreleri
+        // Doğal insan konuşması parametreleri
         utterance.pitchMultiplier = tone.pitchMultiplier
         utterance.rate = AVSpeechUtteranceDefaultSpeechRate * tone.rateMultiplier
         utterance.volume = 1.0
+        utterance.preUtteranceDelay = 0.04
+        utterance.postUtteranceDelay = 0.08
         
         onSpeakingStarted?()
         synthesizer.speak(utterance)
@@ -152,14 +252,17 @@ public final class ErisSpeaker: NSObject, AVSpeechSynthesizerDelegate, @unchecke
     }
     
     public var isSpeaking: Bool {
-        synthesizer.isSpeaking
+        synthesizer.isSpeaking || ErisNeuralSpeaker.shared.isSpeaking
     }
     
     public func stopSpeaking() {
         if synthesizer.isSpeaking {
             synthesizer.stopSpeaking(at: .immediate)
         }
+        ErisNeuralSpeaker.shared.stop()
     }
+    
+    // MARK: - AVSpeechSynthesizerDelegate
     
     public func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
         onSpeakingFinished?()
