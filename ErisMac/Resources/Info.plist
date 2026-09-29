@@ -28,5 +28,7 @@
     <string>Eris takviminizi okumak ve onayınızla etkinlik oluşturmak için takvim erişimi ister.</string>
     <key>NSCalendarsUsageDescription</key>
     <string>Eris takviminizi okumak ve onayınızla etkinlik oluşturmak için takvim erişimi ister.</string>
+    <key>ITSAppUsesNonExemptEncryption</key>
+    <false/>
 </dict>
 </plist>
