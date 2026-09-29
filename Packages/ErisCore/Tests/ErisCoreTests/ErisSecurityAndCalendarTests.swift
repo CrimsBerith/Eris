@@ -57,4 +57,34 @@ final class ErisSecurityAndCalendarTests: XCTestCase {
             XCTAssertEqual(hour, 20, "Akşam 8 saati 20:00 olarak parse edilmeli")
         }
     }
+    
+    // MARK: - ErisRateLimiter Kotası & Güvenlik Testi
+    func testRateLimiterOperations() {
+        let limiter = ErisRateLimiter.shared
+        limiter.ignoreCustomKeyOverrideForTesting = true
+        limiter.resetForTesting()
+        
+        let initialCheck = limiter.canMakeRequest()
+        XCTAssertTrue(initialCheck.allowed)
+        XCTAssertEqual(initialCheck.remaining, limiter.maxDailyRequests)
+        
+        // İstek kaydet
+        limiter.recordRequest()
+        XCTAssertEqual(limiter.dailyRequestCount, 1)
+        
+        // Kotayı doldur
+        let tempMax = limiter.maxDailyRequests
+        limiter.maxDailyRequests = 2
+        limiter.recordRequest()
+        
+        let blockedCheck = limiter.canMakeRequest()
+        XCTAssertFalse(blockedCheck.allowed)
+        XCTAssertNotNil(blockedCheck.message)
+        
+        // Temizle & normale dön
+        limiter.maxDailyRequests = tempMax
+        limiter.resetForTesting()
+        XCTAssertTrue(limiter.canMakeRequest().allowed)
+    }
 }
+

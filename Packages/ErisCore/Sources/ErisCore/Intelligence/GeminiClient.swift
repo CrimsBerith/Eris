@@ -76,6 +76,16 @@ public final class GeminiClient: @unchecked Sendable {
             )
         }
 
+        // MARK: 2.1 Günlük İstek Kotası (Rate Limiting & Kötüye Kullanım Koruması)
+        let rateCheck = ErisRateLimiter.shared.canMakeRequest()
+        guard rateCheck.allowed else {
+            throw NSError(
+                domain: "ErisRateLimit",
+                code: 429,
+                userInfo: [NSLocalizedDescriptionKey: rateCheck.message ?? "Günlük kullanım sınırına ulaşıldı."]
+            )
+        }
+
         // MARK: 3. İstek Oluşturma
         let urlString = "https://generativelanguage.googleapis.com/v1beta/models/\(selectedModel.rawValue):generateContent?key=\(apiKey)"
         guard let url = URL(string: urlString) else {
@@ -199,6 +209,8 @@ public final class GeminiClient: @unchecked Sendable {
            let parts = contentObj["parts"] as? [[String: Any]],
            let firstPart = parts.first,
            let replyText = firstPart["text"] as? String {
+            // Başarılı istek sonrası günlük kotayı kaydet
+            ErisRateLimiter.shared.recordRequest()
             return replyText.trimmingCharacters(in: .whitespacesAndNewlines)
         }
 
