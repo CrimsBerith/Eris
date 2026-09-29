@@ -122,7 +122,8 @@ public final class ErisMemoryDatabase: @unchecked Sendable {
     private func openDatabase() {
         let path = getDatabaseURL().path
         if sqlite3_open(path, &db) != SQLITE_OK {
-            print("Veritabanı açılamadı: \(path)")
+            print("❌ Eris veritabanı açılamadı: \(path) — \(String(cString: sqlite3_errmsg(db)))")
+            db = nil
         }
     }
     
@@ -276,20 +277,23 @@ public final class ErisMemoryDatabase: @unchecked Sendable {
             var statement: OpaquePointer?
             if sqlite3_prepare_v2(db, insertQuery, -1, &statement, nil) == SQLITE_OK {
                 let tagsStr = item.tags.joined(separator: ",")
-                sqlite3_bind_text(statement, 1, (item.id as NSString).utf8String, -1, nil)
+                // SQLITE_TRANSIENT: Swift string'ler geçici; SQLite hemen kopyalar (dangling pointer önlemi)
+                sqlite3_bind_text(statement, 1, item.id, -1, SQLITE_TRANSIENT)
                 sqlite3_bind_double(statement, 2, item.createdAt.timeIntervalSince1970)
-                sqlite3_bind_text(statement, 3, (item.category.rawValue as NSString).utf8String, -1, nil)
-                sqlite3_bind_text(statement, 4, (item.content as NSString).utf8String, -1, nil)
+                sqlite3_bind_text(statement, 3, item.category.rawValue, -1, SQLITE_TRANSIENT)
+                sqlite3_bind_text(statement, 4, item.content, -1, SQLITE_TRANSIENT)
                 sqlite3_bind_int(statement, 5, item.pinned ? 1 : 0)
-                sqlite3_bind_text(statement, 6, (item.title as NSString).utf8String, -1, nil)
-                sqlite3_bind_text(statement, 7, (tagsStr as NSString).utf8String, -1, nil)
-                sqlite3_bind_text(statement, 8, (item.source as NSString).utf8String, -1, nil)
+                sqlite3_bind_text(statement, 6, item.title, -1, SQLITE_TRANSIENT)
+                sqlite3_bind_text(statement, 7, tagsStr, -1, SQLITE_TRANSIENT)
+                sqlite3_bind_text(statement, 8, item.source, -1, SQLITE_TRANSIENT)
                 if let fName = item.fileName {
-                    sqlite3_bind_text(statement, 9, (fName as NSString).utf8String, -1, nil)
+                    sqlite3_bind_text(statement, 9, fName, -1, SQLITE_TRANSIENT)
                 } else {
                     sqlite3_bind_null(statement, 9)
                 }
-                sqlite3_step(statement)
+                if sqlite3_step(statement) != SQLITE_DONE {
+                    print("⚠️ Hafıza kaydedilemedi: \(String(cString: sqlite3_errmsg(db)))")
+                }
             }
             sqlite3_finalize(statement)
         }
@@ -313,20 +317,22 @@ public final class ErisMemoryDatabase: @unchecked Sendable {
             if sqlite3_prepare_v2(db, updateQuery, -1, &statement, nil) == SQLITE_OK {
                 let tagsStr = tags.joined(separator: ",")
                 if let t = title, !t.isEmpty {
-                    sqlite3_bind_text(statement, 1, (t as NSString).utf8String, -1, nil)
+                    sqlite3_bind_text(statement, 1, t, -1, SQLITE_TRANSIENT)
                 } else {
                     sqlite3_bind_null(statement, 1)
                 }
-                sqlite3_bind_text(statement, 2, (content as NSString).utf8String, -1, nil)
-                sqlite3_bind_text(statement, 3, (category.rawValue as NSString).utf8String, -1, nil)
-                sqlite3_bind_text(statement, 4, (tagsStr as NSString).utf8String, -1, nil)
+                sqlite3_bind_text(statement, 2, content, -1, SQLITE_TRANSIENT)
+                sqlite3_bind_text(statement, 3, category.rawValue, -1, SQLITE_TRANSIENT)
+                sqlite3_bind_text(statement, 4, tagsStr, -1, SQLITE_TRANSIENT)
                 if let f = fileName, !f.isEmpty {
-                    sqlite3_bind_text(statement, 5, (f as NSString).utf8String, -1, nil)
+                    sqlite3_bind_text(statement, 5, f, -1, SQLITE_TRANSIENT)
                 } else {
                     sqlite3_bind_null(statement, 5)
                 }
-                sqlite3_bind_text(statement, 6, (id as NSString).utf8String, -1, nil)
-                sqlite3_step(statement)
+                sqlite3_bind_text(statement, 6, id, -1, SQLITE_TRANSIENT)
+                if sqlite3_step(statement) != SQLITE_DONE {
+                    print("⚠️ Hafıza güncellenemedi (id: \(id)): \(String(cString: sqlite3_errmsg(db)))")
+                }
             }
             sqlite3_finalize(statement)
         }
@@ -349,14 +355,14 @@ public final class ErisMemoryDatabase: @unchecked Sendable {
             let query = "DELETE FROM memories WHERE id = ?;"
             var statement: OpaquePointer?
             if sqlite3_prepare_v2(db, query, -1, &statement, nil) == SQLITE_OK {
-                sqlite3_bind_text(statement, 1, (id as NSString).utf8String, -1, nil)
+                sqlite3_bind_text(statement, 1, id, -1, SQLITE_TRANSIENT)
                 sqlite3_step(statement)
             }
             sqlite3_finalize(statement)
         }
         ErisSyncService.shared.pushToCloud()
     }
-    
+
     public func getAllMemories() -> [ErisMemoryRecord] {
         return dbQueue.sync {
             var records: [ErisMemoryRecord] = []
@@ -364,10 +370,12 @@ public final class ErisMemoryDatabase: @unchecked Sendable {
             var statement: OpaquePointer?
             if sqlite3_prepare_v2(db, selectQuery, -1, &statement, nil) == SQLITE_OK {
                 while sqlite3_step(statement) == SQLITE_ROW {
-                    let id = String(cString: sqlite3_column_text(statement, 0))
+                    // NULL pointer güvenliği: sütun NULL ise varsayılan değer kullan (çökme önlemi)
+                    guard let idPtr = sqlite3_column_text(statement, 0) else { continue }
+                    let id = String(cString: idPtr)
                     let createdAt = Date(timeIntervalSince1970: sqlite3_column_double(statement, 1))
-                    let categoryStr = String(cString: sqlite3_column_text(statement, 2))
-                    let content = String(cString: sqlite3_column_text(statement, 3))
+                    let categoryStr = sqlite3_column_text(statement, 2).map { String(cString: $0) } ?? MemoryCategory.preference.rawValue
+                    let content = sqlite3_column_text(statement, 3).map { String(cString: $0) } ?? ""
                     let pinned = sqlite3_column_int(statement, 4) == 1
                     
                     let titleStr: String? = sqlite3_column_text(statement, 5).map { String(cString: $0) }
@@ -401,7 +409,7 @@ public final class ErisMemoryDatabase: @unchecked Sendable {
             let query = "UPDATE memories SET pinned = CASE WHEN pinned = 1 THEN 0 ELSE 1 END WHERE id = ?;"
             var statement: OpaquePointer?
             if sqlite3_prepare_v2(db, query, -1, &statement, nil) == SQLITE_OK {
-                sqlite3_bind_text(statement, 1, (id as NSString).utf8String, -1, nil)
+                sqlite3_bind_text(statement, 1, id, -1, SQLITE_TRANSIENT)
                 sqlite3_step(statement)
             }
             sqlite3_finalize(statement)

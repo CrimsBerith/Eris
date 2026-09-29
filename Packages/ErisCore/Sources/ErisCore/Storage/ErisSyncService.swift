@@ -22,23 +22,38 @@ public final class ErisSyncService: @unchecked Sendable {
         keyValueStore.synchronize()
     }
     
-    /// Yerel hafızayı, açık döngüleri ve kontrol listelerini iCloud'a yükler
+    /// Yerel hafızayı, açık döngüleri ve kontrol listelerini iCloud'a yükler.
+    ///
+    /// ⚠️ Sınır: NSUbiquitousKeyValueStore toplamda 1 MB / 1024 anahtar sınırına tabidir.
+    /// Sınıra yaklaşıldığında senkron sessizce başarısız olabilir. Boyut kontrolü yapılır.
     public func pushToCloud() {
+        // NSUbiquitousKeyValueStore toplam 1 MB (1_048_576 bayt) sınırı
+        let kMaxTotalBytes = 900_000 // Güvenlik payıyla 900 KB
+
         let localMemories = ErisMemoryDatabase.shared.getAllMemories()
         if let data = try? JSONEncoder().encode(localMemories) {
-            keyValueStore.set(data, forKey: memoriesSyncKey)
+            if data.count < kMaxTotalBytes {
+                keyValueStore.set(data, forKey: memoriesSyncKey)
+            } else {
+                // Sınır aşıldı: yalnızca son 50 kaydı ve sabitlenmiş kayıtları senkronize et
+                let trimmed = Array(localMemories.filter { $0.pinned }.prefix(20) + localMemories.prefix(30))
+                if let trimmedData = try? JSONEncoder().encode(trimmed) {
+                    keyValueStore.set(trimmedData, forKey: memoriesSyncKey)
+                }
+                print("⚠️ Eris iCloud: Hafıza veri boyutu (\(data.count / 1024) KB) sınıra yaklaştı — yalnızca son/sabitlenmiş kayıtlar senkronize edildi.")
+            }
         }
-        
+
         let localLoops = ErisOpenLoopsEngine.shared.activeLoops
         if let data = try? JSONEncoder().encode(localLoops) {
             keyValueStore.set(data, forKey: openLoopsSyncKey)
         }
-        
+
         let localChecklists = ErisLivingChecklistEngine.shared.checklists
         if let data = try? JSONEncoder().encode(localChecklists) {
             keyValueStore.set(data, forKey: checklistsSyncKey)
         }
-        
+
         keyValueStore.synchronize()
     }
     

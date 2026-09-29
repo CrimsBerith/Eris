@@ -87,7 +87,7 @@ public extension View {
     func glassCardShadow(radius: CGFloat = 8) -> some View {
         self.shadow(color: Color.black.opacity(0.12), radius: radius, y: 2)
     }
-    
+
     /// Bronz hover glow efekti (macOS)
     func bronzeGlow(isActive: Bool = false) -> some View {
         self.shadow(
@@ -97,21 +97,13 @@ public extension View {
             radius: 12, y: 0
         )
     }
-    
+
     /// Darbeli (pulsing) kenar efekti — dinleme durumunda
+    /// Reduce Motion aktifse animasyon atlanır, yalnızca renk değişir
     func pulsingBorder(isActive: Bool, color: Color = ErisTheme.listeningGreen) -> some View {
-        self.overlay(
-            RoundedRectangle(cornerRadius: 16)
-                .stroke(color.opacity(isActive ? 0.5 : 0), lineWidth: 1.5)
-                .animation(
-                    isActive
-                        ? .easeInOut(duration: 0.8).repeatForever(autoreverses: true)
-                        : .default,
-                    value: isActive
-                )
-        )
+        self.modifier(PulsingBorderModifier(isActive: isActive, color: color))
     }
-    
+
     /// Animasyonlu görünürlük — kart ve widget giriş/çıkışları
     func animatedVisibility(_ isVisible: Bool, transition: AnyTransition = .cardReveal) -> some View {
         Group {
@@ -121,7 +113,71 @@ public extension View {
         }
         .animation(.cardEntry, value: isVisible)
     }
+
+    /// Reduce Transparency aktifken opaklığı tam, değilse verilen değer
+    func adaptiveOpacity(_ opacity: Double) -> some View {
+        self.modifier(AdaptiveOpacityModifier(targetOpacity: opacity))
+    }
 }
+
+// MARK: - Accessibility-Aware Modifier'lar
+
+/// Reduce Motion ortam değerini dinleyerek nabız animasyonunu yöneten modifier
+private struct PulsingBorderModifier: ViewModifier {
+    let isActive: Bool
+    let color: Color
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    func body(content: Content) -> some View {
+        content.overlay(
+            RoundedRectangle(cornerRadius: 16)
+                .stroke(color.opacity(isActive ? 0.5 : 0), lineWidth: 1.5)
+                .animation(
+                    isActive && !reduceMotion
+                        ? .easeInOut(duration: 0.8).repeatForever(autoreverses: true)
+                        : .default,
+                    value: isActive
+                )
+        )
+    }
+}
+
+/// Reduce Transparency aktifken opaklığı tam verir
+private struct AdaptiveOpacityModifier: ViewModifier {
+    let targetOpacity: Double
+    @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
+
+    func body(content: Content) -> some View {
+        content.opacity(reduceTransparency ? 1.0 : targetOpacity)
+    }
+}
+
+// MARK: - Haptik Geri Bildirim Yardımcısı (iOS)
+
+#if os(iOS)
+public enum ErisHaptics {
+    /// Hafif dokunuş — sekme geçişleri, seçim
+    public static func light() {
+        UIImpactFeedbackGenerator(style: .light).impactOccurred()
+    }
+    /// Orta dokunuş — buton basışları, kart kaldırma
+    public static func medium() {
+        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+    }
+    /// Başarı bildirimi — onay, tamamlama
+    public static func success() {
+        UINotificationFeedbackGenerator().notificationOccurred(.success)
+    }
+    /// Hata bildirimi — red, başarısız eylem
+    public static func error() {
+        UINotificationFeedbackGenerator().notificationOccurred(.error)
+    }
+    /// Uyarı bildirimi — sıfır-güven kapısı
+    public static func warning() {
+        UINotificationFeedbackGenerator().notificationOccurred(.warning)
+    }
+}
+#endif
 
 // MARK: - Not Kayıt Toast Bileşeni
 

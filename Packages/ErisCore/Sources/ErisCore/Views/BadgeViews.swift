@@ -185,5 +185,7 @@ public struct PinButton: View {
                 )
         }
         .buttonStyle(.plain)
+        .accessibilityLabel(isPinned ? "Sabitlemeyi kaldır" : "Sabitle")
+        .accessibilityHint("Notu sabit listeye alır ya da kaldırır")
     }
 }

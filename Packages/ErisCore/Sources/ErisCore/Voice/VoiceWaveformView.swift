@@ -2,18 +2,23 @@ import SwiftUI
 
 public struct VoiceWaveformView: View {
     @State private var phase: Double = 0
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
     public var isListening: Bool
     public var isSpeaking: Bool
     public var audioLevel: Float = 0.0
     public var barCount: Int = 16
-    
+
+    /// Aktif ses durumu — animasyon yalnızca dinlerken veya konuşurken çalışır (pil tasarrufu)
+    private var isActive: Bool { isListening || isSpeaking }
+
     public init(isListening: Bool, isSpeaking: Bool, audioLevel: Float = 0.0, barCount: Int = 16) {
         self.isListening = isListening
         self.isSpeaking = isSpeaking
         self.audioLevel = audioLevel
         self.barCount = barCount
     }
-    
+
     public var body: some View {
         HStack(spacing: 3.5) {
             ForEach(0..<barCount, id: \.self) { index in
@@ -29,18 +34,34 @@ public struct VoiceWaveformView: View {
                         width: 3.5,
                         height: barHeight(for: index)
                     )
-                    .shadow(color: glowColor.opacity(isListening || isSpeaking ? 0.45 : 0.0), radius: 4)
+                    .shadow(color: glowColor.opacity(isActive ? 0.45 : 0.0), radius: 4)
+                    // Reduce Motion kapalıysa ve aktif durumdayken animasyonu uygula
                     .animation(
-                        .easeInOut(duration: 0.15).repeatForever(autoreverses: true),
+                        isActive && !reduceMotion
+                            ? .easeInOut(duration: 0.15).repeatForever(autoreverses: true)
+                            : .default,
                         value: phase
                     )
             }
         }
         .frame(height: 34)
         .padding(.horizontal, 8)
+        .accessibilityHidden(true) // Dekoratif ses dalgası — VoiceOver için gizle
+        .onChange(of: isActive) { _, active in
+            // Sadece aktif modda animasyonu başlat; boşta durdurup faz sıfırla (pil tasarrufu)
+            if active && !reduceMotion {
+                withAnimation(.easeInOut(duration: 0.55).repeatForever(autoreverses: true)) {
+                    phase = 1.0
+                }
+            } else {
+                withAnimation(.default) { phase = 0 }
+            }
+        }
         .onAppear {
-            withAnimation(.easeInOut(duration: 0.55).repeatForever(autoreverses: true)) {
-                phase = 1.0
+            if isActive && !reduceMotion {
+                withAnimation(.easeInOut(duration: 0.55).repeatForever(autoreverses: true)) {
+                    phase = 1.0
+                }
             }
         }
     }

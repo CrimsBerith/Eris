@@ -35,6 +35,8 @@ public struct OpenLoopCardView: View {
             }
             .buttonStyle(.plain)
             .padding(.top, 2)
+            .accessibilityLabel(loop.status == .completed ? "Tamamlandı olarak işaretlendi" : "Tamamlandı olarak işaretle")
+            .accessibilityHint(loop.title)
             
             VStack(alignment: .leading, spacing: 4) {
                 // Alan & Aciliyet rozeti
@@ -95,7 +97,11 @@ public struct OpenLoopCardView: View {
                     .padding(4)
             }
             .buttonStyle(.plain)
+            .accessibilityLabel("Kaldır")
+            .accessibilityHint("Bu açık döngüyü listeden kaldırır")
         }
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel("\(loop.domain.shortDisplayName): \(loop.title)")
         .padding(10)
         .background(
             RoundedRectangle(cornerRadius: 10)

@@ -101,34 +101,38 @@ public struct ErisStatusBadgeView: View {
     public let isListening: Bool
     public let isThinking: Bool
     public let isSpeaking: Bool
-    
+
     @State private var pulse: Bool = false
-    
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
     public init(isListening: Bool, isThinking: Bool, isSpeaking: Bool) {
         self.isListening = isListening
         self.isThinking = isThinking
         self.isSpeaking = isSpeaking
     }
-    
+
     public var body: some View {
         HStack(spacing: 7) {
             ZStack {
                 Circle()
                     .fill(statusColor)
                     .frame(width: 8, height: 8)
-                
-                if isListening || isThinking || isSpeaking {
+
+                // Reduce Motion aktifse nabız halkasını gizle
+                if (isListening || isThinking || isSpeaking) && !reduceMotion {
                     Circle()
                         .stroke(statusColor.opacity(0.6), lineWidth: 1.5)
                         .frame(width: pulse ? 18 : 8, height: pulse ? 18 : 8)
                         .opacity(pulse ? 0 : 0.8)
                 }
             }
-            
+            .accessibilityHidden(true) // Dekoratif durum göstergesi
+
             Text(statusText)
                 .font(.system(size: 11, weight: .semibold, design: .rounded))
                 .foregroundColor(statusColor)
                 .transition(.opacity)
+                .accessibilityLabel(statusText) // VoiceOver için durum metni
         }
         .padding(.horizontal, 10)
         .padding(.vertical, 5)
@@ -141,6 +145,7 @@ public struct ErisStatusBadgeView: View {
                 )
         )
         .onAppear {
+            guard !reduceMotion else { return }
             withAnimation(.easeInOut(duration: 1.2).repeatForever(autoreverses: false)) {
                 pulse = true
             }

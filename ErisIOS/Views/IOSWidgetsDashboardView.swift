@@ -34,6 +34,7 @@ struct IOSWidgetsDashboardView: View {
                     Button(action: { showWidgetSelector = true }) {
                         HStack(spacing: 5) {
                             Image(systemName: "slider.horizontal.3")
+                                .accessibilityHidden(true)
                             Text("Widget Seç")
                         }
                         .font(.caption).bold()
@@ -42,26 +43,19 @@ struct IOSWidgetsDashboardView: View {
                         .padding(.vertical, 7)
                         .background(Capsule().fill(ErisTheme.bronzeHighlight))
                     }
+                    .accessibilityLabel("Widget seç")
+                    .accessibilityHint("Panel widget'larını düzenler")
                 }
                 .padding(.horizontal, 16)
                 .padding(.top, 12)
                 
                 if widgetManager.activeWidgets.isEmpty {
-                    VStack(spacing: 12) {
-                        Image(systemName: "square.dashed")
-                            .font(.system(size: 36))
-                            .foregroundColor(ErisTheme.coldGray)
-                        Text("Henüz bir widget seçilmedi")
-                            .font(.subheadline).bold()
-                            .foregroundColor(ErisTheme.coldWhite)
-                        Text("Yukarıdaki 'Widget Seç' butonuna dokunarak paneline kumaş, ajanda, piyasa veya denizcilik kartlarını ekleyebilirsin.")
-                            .font(.caption)
-                            .foregroundColor(ErisTheme.coldGray)
-                            .multilineTextAlignment(.center)
-                            .padding(.horizontal, 24)
+                    // Paylaşılan ErisEmptyStateView ile tutarlı boş durum
+                    ErisEmptyStateView.widgets {
+                        showWidgetSelector = true
                     }
                     .frame(maxWidth: .infinity)
-                    .padding(.vertical, 50)
+                    .padding(.vertical, 30)
                 } else {
                     VStack(spacing: 14) {
                         // Güvenlik Kapısı: Bekleyen onay bileti varsa en üstte göster

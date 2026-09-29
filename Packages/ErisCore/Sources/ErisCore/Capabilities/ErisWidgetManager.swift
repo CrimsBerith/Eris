@@ -98,7 +98,7 @@ public final class ErisWidgetManager: ObservableObject, @unchecked Sendable {
         if let groupDefaults = UserDefaults(suiteName: "group.com.alfagolab.eris") {
             groupDefaults.set(rawArray, forKey: storageKey)
         }
-        objectWillChange.send()
+        // Not: @Published activeWidgets zaten objectWillChange yayıyor — manuel çağrı gereksiz
     }
     
     public func isWidgetEnabled(_ type: ErisWidgetType) -> Bool {

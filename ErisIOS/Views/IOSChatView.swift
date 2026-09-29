@@ -22,12 +22,14 @@ struct IOSChatView: View {
             HStack(spacing: 8) {
                 // Aktif Özel Ajan Seçici Pill
                 Button(action: {
+                    ErisHaptics.light()
                     showAgentPicker = true
                 }) {
                     HStack(spacing: 5) {
                         Image(systemName: personaManager.activeModule?.icon ?? "sparkles")
                             .foregroundColor(ErisTheme.bronzeHighlight)
                             .font(.system(size: 12))
+                            .accessibilityHidden(true)
                         Text(personaManager.activeModule?.shortTitle ?? "Özel Ajan")
                             .font(.system(size: 11.5, weight: .semibold))
                             .foregroundColor(ErisTheme.coldWhite)
@@ -37,6 +39,7 @@ struct IOSChatView: View {
                         Image(systemName: "chevron.down")
                             .font(.system(size: 8, weight: .bold))
                             .foregroundColor(ErisTheme.coldGray)
+                            .accessibilityHidden(true)
                     }
                     .padding(.horizontal, 10)
                     .padding(.vertical, 7)
@@ -46,6 +49,8 @@ struct IOSChatView: View {
                     )
                 }
                 .buttonStyle(.plain)
+                .accessibilityLabel("Ajan seç: \(personaManager.activeModule?.shortTitle ?? "Özel Ajan")")
+                .accessibilityHint("Ajan listesini açar")
                 
                 Spacer()
                 
@@ -54,6 +59,7 @@ struct IOSChatView: View {
                     Image(systemName: "thermometer.medium")
                         .font(.system(size: 11))
                         .foregroundColor(Color(red: 0.5, green: 0.75, blue: 0.95))
+                        .accessibilityHidden(true)
                     Text("\(Int(appState.marineInfo.airTempCelsius))°C")
                         .font(.system(size: 11.5, weight: .medium))
                         .foregroundColor(ErisTheme.coldWhite)
@@ -61,9 +67,13 @@ struct IOSChatView: View {
                 .padding(.horizontal, 9)
                 .padding(.vertical, 6)
                 .background(Capsule().fill(Color.white.opacity(0.06)))
+                .accessibilityLabel("Hava durumu: \(Int(appState.marineInfo.airTempCelsius)) derece")
                 
                 // Sabah Brifingi Kısa Erişim
-                Button(action: { appState.playMorningBriefing() }) {
+                Button(action: {
+                    ErisHaptics.light()
+                    appState.playMorningBriefing()
+                }) {
                     HStack(spacing: 4) {
                         Image(systemName: "sun.max.fill")
                             .font(.system(size: 12))
@@ -288,6 +298,7 @@ struct IOSChatView: View {
                                 .foregroundColor(ErisTheme.coldGray)
                         }
                         .buttonStyle(.plain)
+                        .accessibilityLabel("Metni temizle")
                     }
                 }
                 .padding(10)
@@ -327,9 +338,10 @@ struct IOSChatView: View {
                 .buttonStyle(.plain)
                 .accessibilityLabel(appState.isListening ? L10n.tapToStop : L10n.tapToSpeak)
                 
-                // Gönder Butonu (Yalnızca metin varsa veya gönderim için)
+                // Gönder Butonu (Yalnızca metin varsa)
                 if !appState.inputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                     Button(action: {
+                        ErisHaptics.medium()
                         appState.sendUserMessage(appState.inputText)
                     }) {
                         Image(systemName: "arrow.up.circle.fill")
@@ -337,6 +349,7 @@ struct IOSChatView: View {
                             .foregroundColor(ErisTheme.bronzeHighlight)
                     }
                     .buttonStyle(.plain)
+                    .accessibilityLabel("Gönder")
                     .transition(.scale.combined(with: .opacity))
                 }
             }
