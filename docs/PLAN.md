@@ -257,15 +257,15 @@
 | Faz 1 | Çekirdek altyapı | — | ✅ Tamamlandı |
 | Faz 2 | UI, Ses, Widget, Agent | — | ✅ Tamamlandı |
 | Faz 3 | Hafıza, Brifing, Servisler | — | ✅ Tamamlandı |
-| **Faz 4** | **Stabilizasyon & Refaktör** | **2-3 gün** | 🔜 **Sıradaki** |
-| **Faz 5** | **iCloud Senkronizasyonu** | **2-3 gün** | ⏳ Bekliyor |
-| **Faz 6** | **App Store Görseller & Marka** | **1-2 gün** | ⏳ Bekliyor |
-| **Faz 7** | **Güvenlik Sıkılaştırma** | **1 gün** | ⏳ Bekliyor |
-| **Faz 8** | **Build, Signing & TestFlight** | **1-2 gün** | ⏳ Bekliyor |
+| Faz 4 | Stabilizasyon & Refaktör | — | ✅ Tamamlandı |
+| Faz 5 | iCloud Senkronizasyonu | — | ✅ Tamamlandı |
+| Faz 6 | App Store Görseller & Marka | — | ✅ Tamamlandı |
+| Faz 7 | Güvenlik Sıkılaştırma (Guardrails, Rate Limiter) | — | ✅ Tamamlandı |
+| **Faz 8** | **Build, Signing & TestFlight** | **1-2 gün** | 🔜 **Sıradaki (Aktif)** |
 | **Faz 9** | **App Store Review & Yayın** | **2-5 gün** (Apple review) | ⏳ Bekliyor |
 | Faz 10 | Yayın Sonrası & v1.1+ | Sürekli | 🔮 Gelecek |
 
-**Toplam tahmini kalan süre: ~10-16 gün** (Apple review süresi dahil)
+**Toplam tahmini kalan süre: ~3-7 gün** (Apple review süresi dahil)
 
 ---
 
@@ -276,21 +276,23 @@ Eris/
 ├── Eris.xcodeproj/          # Xcode proje dosyası
 ├── project.yml               # XcodeGen yapılandırması
 ├── ErisMac/
-│   ├── ErisMacApp.swift      # macOS uygulama giriş noktası (413 satır)
-│   ├── MainWindowView.swift  # Ana pencere + tüm Mac view'ları (1.392 satır) ⚠️ Parçalanmalı
+│   ├── ErisMacApp.swift          # macOS uygulama giriş noktası
+│   ├── MainWindowView.swift      # Ana pencere ve canlı sağ panel
+│   ├── Views/                    # MacChecklistsSheetView, MacVaultSheetView, MacMessageComponents, MacSettingsView
 │   └── Resources/
 │       ├── Info.plist
 │       ├── PrivacyInfo.xcprivacy
 │       └── Assets.xcassets/AppIcon.appiconset/
 ├── ErisIOS/
-│   ├── ErisIOSApp.swift      # Tüm iOS kodu tek dosyada (1.954 satır) ⚠️ Parçalanmalı
+│   ├── ErisIOSApp.swift          # iOS uygulama giriş noktası ve router
+│   ├── Views/                    # IOSChatView, IOSWidgetsDashboardView, IOSMemoryView, IOSSettingsView
 │   └── Resources/
 │       ├── Info.plist
 │       ├── PrivacyInfo.xcprivacy
 │       └── Assets.xcassets/AppIcon.appiconset/
-├── Packages/ErisCore/        # Paylaşılan Swift Package
+├── Packages/ErisCore/            # Paylaşılan Swift Package
 │   └── Sources/ErisCore/
-│       ├── Config/           → ErisAppConfig.swift
+│       ├── Config/               → ErisAppConfig.swift, ErisRateLimiter.swift
 │       ├── Models/           → Message, PendingAction, ApprovalToken, MemoryItem
 │       ├── Intelligence/     → GeminiClient, ErisAgentPersonaManager
 │       ├── Voice/            → ErisSpeaker, ErisVoiceListener, VoiceWaveformView
