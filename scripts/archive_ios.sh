@@ -46,11 +46,15 @@ if [ -n "$TEAM_ID" ] && [ "$2" == "--export" ]; then
     echo ""
     echo "3. .ipa Dosyası Dışa Aktarılıyor (App Store Dağıtımı)..."
     mkdir -p "$EXPORT_PATH"
-    sed "s/<\/dict>/    <key>teamID<\/key>\n    <string>$TEAM_ID<\/string>\n<\/dict>/" "$PROJECT_DIR/scripts/ExportOptions-AppStore-iOS.plist" > "$PROJECT_DIR/build/ExportOptions-iOS-active.plist"
+    ACTIVE_PLIST="$PROJECT_DIR/build/ExportOptions-iOS-active.plist"
+    cp "$PROJECT_DIR/scripts/ExportOptions-AppStore-iOS.plist" "$ACTIVE_PLIST"
+    /usr/libexec/PlistBuddy -c "Set :teamID $TEAM_ID" "$ACTIVE_PLIST" 2>/dev/null || \
+    /usr/libexec/PlistBuddy -c "Add :teamID string $TEAM_ID" "$ACTIVE_PLIST"
+    
     xcodebuild -exportArchive \
         -archivePath "$ARCHIVE_PATH" \
         -exportPath "$EXPORT_PATH" \
-        -exportOptionsPlist "$PROJECT_DIR/build/ExportOptions-iOS-active.plist"
+        -exportOptionsPlist "$ACTIVE_PLIST"
     echo "✅ IPA Paketi Başarıyla Üretildi: $EXPORT_PATH"
 fi
 

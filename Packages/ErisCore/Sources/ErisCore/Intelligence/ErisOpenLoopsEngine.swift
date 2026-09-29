@@ -17,7 +17,6 @@ public final class ErisOpenLoopsEngine: ObservableObject, @unchecked Sendable {
     
     @Published public private(set) var activeLoops: [OpenLoopItem] = []
     
-    private let queue = DispatchQueue(label: "com.eris.openloops", qos: .userInitiated)
     private let storageKey = "eris_open_loops_v1"
     private let appGroupSuite = "group.com.alfagolab.eris"
     
@@ -85,7 +84,10 @@ public final class ErisOpenLoopsEngine: ObservableObject, @unchecked Sendable {
     // MARK: - Açık Döngü Ekleme & Yönetim
     
     public func addLoop(_ item: OpenLoopItem) {
-        queue.async {
+        if Thread.isMainThread {
+            self.activeLoops.insert(item, at: 0)
+            self.saveLoops()
+        } else {
             DispatchQueue.main.async {
                 self.activeLoops.insert(item, at: 0)
                 self.saveLoops()
@@ -94,33 +96,30 @@ public final class ErisOpenLoopsEngine: ObservableObject, @unchecked Sendable {
     }
     
     public func completeLoop(id: UUID) {
-        queue.async {
-            DispatchQueue.main.async {
-                if let idx = self.activeLoops.firstIndex(where: { $0.id == id }) {
-                    self.activeLoops[idx].status = .completed
-                    self.activeLoops[idx].updatedAt = Date()
-                    self.saveLoops()
-                }
+        let block = {
+            if let idx = self.activeLoops.firstIndex(where: { $0.id == id }) {
+                self.activeLoops[idx].status = .completed
+                self.activeLoops[idx].updatedAt = Date()
+                self.saveLoops()
             }
         }
+        if Thread.isMainThread { block() } else { DispatchQueue.main.async(execute: block) }
     }
     
     public func dismissLoop(id: UUID) {
-        queue.async {
-            DispatchQueue.main.async {
-                self.activeLoops.removeAll(where: { $0.id == id })
-                self.saveLoops()
-            }
+        let block = {
+            self.activeLoops.removeAll(where: { $0.id == id })
+            self.saveLoops()
         }
+        if Thread.isMainThread { block() } else { DispatchQueue.main.async(execute: block) }
     }
     
     public func setLoopsFromCloud(_ items: [OpenLoopItem]) {
-        queue.async {
-            DispatchQueue.main.async {
-                self.activeLoops = items
-                self.saveLoops()
-            }
+        let block = {
+            self.activeLoops = items
+            self.saveLoops()
         }
+        if Thread.isMainThread { block() } else { DispatchQueue.main.async(execute: block) }
     }
     
     /// Bir metni analiz edip potansiyel yeni bir açık döngü var mı diye bakar

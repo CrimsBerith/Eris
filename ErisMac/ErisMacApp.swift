@@ -68,7 +68,7 @@ final class ErisMacState: ObservableObject {
     @Published var memories: [ErisMemoryRecord] = []
     @Published var marketItems: [MarketItem] = []
     @Published var marineInfo: MarineWeatherInfo = ExternalDataService.shared.getMarineWeather()
-    @Published var selectedModel: GeminiModelChoice = .flash
+    @Published var selectedModel: GeminiModelChoice = .flash2
     @Published var selectedVoiceTone: ErisVoiceTone = ErisSpeaker.shared.selectedTone {
         didSet {
             ErisSpeaker.shared.selectedTone = selectedVoiceTone
@@ -98,6 +98,16 @@ final class ErisMacState: ObservableObject {
         ErisSyncService.shared.onSyncUpdated = { [weak self] in
             Task { @MainActor [weak self] in
                 self?.refreshMemories()
+            }
+        }
+        
+        // Arka planda canlı hava ve piyasa verilerini çek
+        Task { [weak self] in
+            let liveMarine = await ExternalDataService.shared.fetchLiveMarineWeather()
+            let liveMarket = await ExternalDataService.shared.fetchLiveMarketSummary()
+            await MainActor.run {
+                self?.marineInfo = liveMarine
+                self?.marketItems = liveMarket
             }
         }
     }

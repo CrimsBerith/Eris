@@ -62,7 +62,7 @@ final class ErisIOSState: ObservableObject {
     @Published var selectedTab: IOSTab = .chat
     
     @Published var memories: [ErisMemoryRecord] = []
-    @Published var selectedModel: GeminiModelChoice = .flash
+    @Published var selectedModel: GeminiModelChoice = .flash2
     @Published var selectedVoiceTone: ErisVoiceTone = ErisSpeaker.shared.selectedTone {
         didSet {
             ErisSpeaker.shared.selectedTone = selectedVoiceTone
@@ -118,6 +118,15 @@ final class ErisIOSState: ObservableObject {
         ErisSyncService.shared.onSyncUpdated = { [weak self] in
             Task { @MainActor [weak self] in
                 self?.memories = ErisMemoryDatabase.shared.getAllMemories()
+            }
+        }
+        
+        Task { [weak self] in
+            let liveMarine = await ExternalDataService.shared.fetchLiveMarineWeather()
+            let liveMarket = await ExternalDataService.shared.fetchLiveMarketSummary()
+            await MainActor.run {
+                self?.marineInfo = liveMarine
+                self?.marketItems = liveMarket
             }
         }
     }

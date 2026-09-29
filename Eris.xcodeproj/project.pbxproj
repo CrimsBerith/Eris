@@ -11,15 +11,18 @@
 		170ECECC75CEF04BABE23105 /* IOSChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A79A6E37B7056BB954720687 /* IOSChatView.swift */; };
 		18E5EA643FCED503074BCC74 /* ErisIOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B08AF4AB380BEF8C2487F03 /* ErisIOSApp.swift */; };
 		46B6A4C7B4052409EC5B6993 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 1BC93793130DA8E15E853B61 /* PrivacyInfo.xcprivacy */; };
+		7F8FA47FC421618621506444 /* MacMessageComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97D63B348BB7D00B056F3080 /* MacMessageComponents.swift */; };
 		820DACD3163FE3DB201B3EE7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13BE330CA8BBB2B43FC6846E /* Assets.xcassets */; };
 		90DC77746B7676CC77356B2D /* ErisCore in Frameworks */ = {isa = PBXBuildFile; productRef = 279EEED718B09BC238FED9D5 /* ErisCore */; };
 		9733AC324F323C6D075618A5 /* IOSChecklistsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F156CCFF60ED5A685019860 /* IOSChecklistsView.swift */; };
 		A12F995F51212ED0114D991C /* ErisMacApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5E6DA83FC9FD76E0AC172AB /* ErisMacApp.swift */; };
+		B8F21532D39B7398FEA7800D /* MacChecklistsSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FFA0914341DA3112A0BC8AB /* MacChecklistsSheetView.swift */; };
 		CAD84CA28B1F777D1567A840 /* IOSWidgetsDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F16014AE0D8CC37C73F380F /* IOSWidgetsDashboardView.swift */; };
 		CC0096C5BEDA456A4A9E9174 /* IOSMemoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38ED56F9E2EBF549D9A43FE /* IOSMemoryView.swift */; };
 		CE7616B6D46DDF83D92D4065 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = F7484BF2B7DC648785E92A91 /* PrivacyInfo.xcprivacy */; };
 		EA64D14CC80C4E1E8E2BC7A3 /* MacSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE41E5A290001B43D8732A13 /* MacSettingsView.swift */; };
 		F57065D6BFC13F26DAC6D668 /* IOSSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D23E05357DCA97CB487CF93A /* IOSSettingsView.swift */; };
+		F7108AC01F62AF3197C12FCC /* MacVaultSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD57A382A7204ABC0C33237A /* MacVaultSheetView.swift */; };
 		FD2767ECAE4A8E85938C5975 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4507015B7C3BCB7600D9678B /* Assets.xcassets */; };
 		FD997E6C3E65658EB03C1661 /* MainWindowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91876E903B42D028E24F00A2 /* MainWindowView.swift */; };
 /* End PBXBuildFile section */
@@ -34,13 +37,16 @@
 		72024849BA491CCF81D66903 /* ErisIOS.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = ErisIOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7F16014AE0D8CC37C73F380F /* IOSWidgetsDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IOSWidgetsDashboardView.swift; sourceTree = "<group>"; };
 		8E21972562BBBE9DE56F743A /* ErisCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = ErisCore; path = Packages/ErisCore; sourceTree = SOURCE_ROOT; };
+		8FFA0914341DA3112A0BC8AB /* MacChecklistsSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacChecklistsSheetView.swift; sourceTree = "<group>"; };
 		91876E903B42D028E24F00A2 /* MainWindowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainWindowView.swift; sourceTree = "<group>"; };
+		97D63B348BB7D00B056F3080 /* MacMessageComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacMessageComponents.swift; sourceTree = "<group>"; };
 		A38ED56F9E2EBF549D9A43FE /* IOSMemoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IOSMemoryView.swift; sourceTree = "<group>"; };
 		A79A6E37B7056BB954720687 /* IOSChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IOSChatView.swift; sourceTree = "<group>"; };
 		B5E6DA83FC9FD76E0AC172AB /* ErisMacApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErisMacApp.swift; sourceTree = "<group>"; };
 		CE41E5A290001B43D8732A13 /* MacSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacSettingsView.swift; sourceTree = "<group>"; };
 		D23E05357DCA97CB487CF93A /* IOSSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IOSSettingsView.swift; sourceTree = "<group>"; };
 		F7484BF2B7DC648785E92A91 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		FD57A382A7204ABC0C33237A /* MacVaultSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacVaultSheetView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -135,7 +141,10 @@
 		EB6DEFF944F80B5C08D21E48 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				8FFA0914341DA3112A0BC8AB /* MacChecklistsSheetView.swift */,
+				97D63B348BB7D00B056F3080 /* MacMessageComponents.swift */,
 				CE41E5A290001B43D8732A13 /* MacSettingsView.swift */,
+				FD57A382A7204ABC0C33237A /* MacVaultSheetView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -253,7 +262,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				A12F995F51212ED0114D991C /* ErisMacApp.swift in Sources */,
+				B8F21532D39B7398FEA7800D /* MacChecklistsSheetView.swift in Sources */,
+				7F8FA47FC421618621506444 /* MacMessageComponents.swift in Sources */,
 				EA64D14CC80C4E1E8E2BC7A3 /* MacSettingsView.swift in Sources */,
+				F7108AC01F62AF3197C12FCC /* MacVaultSheetView.swift in Sources */,
 				FD997E6C3E65658EB03C1661 /* MainWindowView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -350,7 +362,7 @@
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_STRICT_CONCURRENCY = complete;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 5.9;
 			};
 			name = Release;
 		};
@@ -481,7 +493,7 @@
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_STRICT_CONCURRENCY = complete;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 5.9;
 			};
 			name = Debug;
 		};
