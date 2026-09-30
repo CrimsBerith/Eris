@@ -18,10 +18,7 @@ let package = Package(
         .target(
             name: "ErisCore",
             dependencies: [],
-            path: "Sources/ErisCore",
-            resources: [
-                .process("Resources")
-            ]
+            path: "Sources/ErisCore"
         ),
         .testTarget(
             name: "ErisCoreTests",
