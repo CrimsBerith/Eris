@@ -31,11 +31,26 @@ public final class ErisVoiceListener: NSObject, @unchecked Sendable {
     }
     
     public func requestAuthorization() async -> Bool {
-        await withCheckedContinuation { continuation in
+        let speechGranted = await withCheckedContinuation { continuation in
             SFSpeechRecognizer.requestAuthorization { status in
                 continuation.resume(returning: status == .authorized)
             }
         }
+        guard speechGranted else { return false }
+        
+        #if os(iOS)
+        if #available(iOS 17.0, *) {
+            return await AVAudioApplication.requestRecordPermission()
+        } else {
+            return await withCheckedContinuation { continuation in
+                AVAudioSession.sharedInstance().requestRecordPermission { granted in
+                    continuation.resume(returning: granted)
+                }
+            }
+        }
+        #else
+        return true
+        #endif
     }
     
     public func startListening() throws {
@@ -98,7 +113,7 @@ public final class ErisVoiceListener: NSObject, @unchecked Sendable {
             guard let self = self else { return }
             
             // Canlı ses seviyesi hesaplama (Waveform animasyonu için)
-            guard let channelData = buffer.floatChannelData?[0] else { return }
+            guard buffer.format.channelCount > 0, let channelData = buffer.floatChannelData?[0] else { return }
             let frameLength = UInt(buffer.frameLength)
             var sum: Float = 0
             for i in 0..<Int(frameLength) {
@@ -142,5 +157,9 @@ public final class ErisVoiceListener: NSObject, @unchecked Sendable {
         recognitionRequest = nil
         recognitionTask = nil
         isListening = false
+        
+        #if os(iOS)
+        try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+        #endif
     }
 }

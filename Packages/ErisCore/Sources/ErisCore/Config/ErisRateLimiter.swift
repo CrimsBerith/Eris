@@ -30,6 +30,18 @@ public final class ErisRateLimiter: ObservableObject, @unchecked Sendable {
     
     // MARK: - Durum Yenileme & Gün Kontrolü
     
+    private func updatePublishedCounts(count: Int, remaining: Int) {
+        if Thread.isMainThread {
+            self.dailyRequestCount = count
+            self.remainingRequestsToday = remaining
+        } else {
+            DispatchQueue.main.async { [weak self] in
+                self?.dailyRequestCount = count
+                self?.remainingRequestsToday = remaining
+            }
+        }
+    }
+    
     private func refreshState() {
         lock.lock()
         defer { lock.unlock() }
@@ -42,8 +54,7 @@ public final class ErisRateLimiter: ObservableObject, @unchecked Sendable {
                 // Yeni bir güne geçildi, sayacı sıfırla
                 defaults.set(0, forKey: countKey)
                 defaults.set(now, forKey: dateKey)
-                dailyRequestCount = 0
-                remainingRequestsToday = maxDailyRequests
+                updatePublishedCounts(count: 0, remaining: maxDailyRequests)
                 return
             }
         } else {
@@ -51,8 +62,7 @@ public final class ErisRateLimiter: ObservableObject, @unchecked Sendable {
         }
         
         let count = defaults.integer(forKey: countKey)
-        dailyRequestCount = count
-        remainingRequestsToday = max(0, maxDailyRequests - count)
+        updatePublishedCounts(count: count, remaining: max(0, maxDailyRequests - count))
     }
     
     // MARK: - Limit Kontrolü
@@ -80,12 +90,14 @@ public final class ErisRateLimiter: ObservableObject, @unchecked Sendable {
         
         refreshState()
         
-        if dailyRequestCount >= maxDailyRequests {
+        let currentCount = defaults.integer(forKey: countKey)
+        if currentCount >= maxDailyRequests {
             let msg = "Günlük soru kotanıza ulaştınız (\(maxDailyRequests)/\(maxDailyRequests)). Kotanız bu gece yarısı otomatik olarak sıfırlanacaktır."
             return (false, 0, msg)
         }
         
-        return (true, remainingRequestsToday, nil)
+        let remaining = max(0, maxDailyRequests - currentCount)
+        return (true, remaining, nil)
     }
     
     /// Başarılı bir istek sonrası sayacı 1 artırır
@@ -98,11 +110,11 @@ public final class ErisRateLimiter: ObservableObject, @unchecked Sendable {
         lock.lock()
         defer { lock.unlock() }
         
-        let newCount = dailyRequestCount + 1
+        let newCount = defaults.integer(forKey: countKey) + 1
         defaults.set(newCount, forKey: countKey)
         defaults.set(Date(), forKey: dateKey)
-        dailyRequestCount = newCount
-        remainingRequestsToday = max(0, maxDailyRequests - newCount)
+        let remaining = max(0, maxDailyRequests - newCount)
+        updatePublishedCounts(count: newCount, remaining: remaining)
     }
     
     /// Testler ve geliştirici amaçlı sayacı sıfırlama
@@ -111,7 +123,6 @@ public final class ErisRateLimiter: ObservableObject, @unchecked Sendable {
         defer { lock.unlock() }
         defaults.removeObject(forKey: countKey)
         defaults.removeObject(forKey: dateKey)
-        dailyRequestCount = 0
-        remainingRequestsToday = maxDailyRequests
+        updatePublishedCounts(count: 0, remaining: maxDailyRequests)
     }
 }

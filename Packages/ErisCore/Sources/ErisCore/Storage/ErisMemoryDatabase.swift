@@ -124,6 +124,10 @@ public final class ErisMemoryDatabase: @unchecked Sendable {
         if sqlite3_open(path, &db) != SQLITE_OK {
             print("❌ Eris veritabanı açılamadı: \(path) — \(String(cString: sqlite3_errmsg(db)))")
             db = nil
+        } else {
+            // WAL (Write-Ahead Logging) modu ile eşzamanlı okuma-yazma performansı ve kilitlenme (SQLITE_BUSY) önleme
+            sqlite3_exec(db, "PRAGMA journal_mode = WAL;", nil, nil, nil)
+            sqlite3_exec(db, "PRAGMA synchronous = NORMAL;", nil, nil, nil)
         }
     }
     

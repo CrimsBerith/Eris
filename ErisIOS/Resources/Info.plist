@@ -41,6 +41,8 @@
     <string>Eris takviminizi okumak ve onayınızla etkinlik oluşturmak için takvim erişimi ister.</string>
     <key>NSCalendarsUsageDescription</key>
     <string>Eris takviminizi okumak ve onayınızla etkinlik oluşturmak için takvim erişimi ister.</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>Eris konuma dayalı proaktif hatırlatmalar oluşturmak ve çevresel bildirimleri tetiklemek için konum izni ister.</string>
     <key>ITSAppUsesNonExemptEncryption</key>
     <false/>
 </dict>

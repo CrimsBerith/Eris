@@ -7,6 +7,7 @@
 
 import Foundation
 import AVFoundation
+import CryptoKit
 
 /// Gerçek stüdyo ve insan ses kalitesinde (OpenAI TTS-1 / Neural) konuşma motoru.
 /// Eris'e nefes alan, tok ve karizmatik gerçek insan sesi kazandırır.
@@ -61,7 +62,9 @@ public final class ErisNeuralSpeaker: NSObject, AVAudioPlayerDelegate, @unchecke
         guard !apiKey.isEmpty else { return false }
         
         let voice = Self.openAIVoiceName(for: tone)
-        let cacheKey = "\(voice)_\(text.hashValue).mp3"
+        let hash = SHA256.hash(data: Data(text.utf8))
+        let hashString = hash.map { String(format: "%02x", $0) }.joined()
+        let cacheKey = "\(voice)_\(hashString).mp3"
         let cachedFile = cacheDirectory.appendingPathComponent(cacheKey)
         
         do {
