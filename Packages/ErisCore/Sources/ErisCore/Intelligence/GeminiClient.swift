@@ -87,7 +87,7 @@ public final class GeminiClient: @unchecked Sendable {
         }
 
         // MARK: 3. İstek Oluşturma
-        let urlString = "https://generativelanguage.googleapis.com/v1beta/models/\(selectedModel.rawValue):generateContent?key=\(apiKey)"
+        let urlString = "https://generativelanguage.googleapis.com/v1beta/models/\(selectedModel.rawValue):generateContent"
         guard let url = URL(string: urlString) else {
             throw NSError(domain: "ErisGemini", code: 400, userInfo: [NSLocalizedDescriptionKey: "Geçersiz API URL'i."])
         }
@@ -149,6 +149,7 @@ public final class GeminiClient: @unchecked Sendable {
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue(apiKey, forHTTPHeaderField: "x-goog-api-key")
         request.httpBody = jsonData
 
         // MARK: 4. Ağ İsteği — Üstel geri çekilmeli (exponential backoff) yeniden deneme

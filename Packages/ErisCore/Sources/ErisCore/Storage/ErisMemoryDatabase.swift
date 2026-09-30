@@ -356,7 +356,7 @@ public final class ErisMemoryDatabase: @unchecked Sendable {
             var statement: OpaquePointer?
             if sqlite3_prepare_v2(db, query, -1, &statement, nil) == SQLITE_OK {
                 sqlite3_bind_text(statement, 1, id, -1, SQLITE_TRANSIENT)
-                sqlite3_step(statement)
+                if sqlite3_step(statement) != SQLITE_DONE { print("⚠️ Hafıza silinemedi: \(String(cString: sqlite3_errmsg(db)))") }
             }
             sqlite3_finalize(statement)
         }
@@ -410,7 +410,7 @@ public final class ErisMemoryDatabase: @unchecked Sendable {
             var statement: OpaquePointer?
             if sqlite3_prepare_v2(db, query, -1, &statement, nil) == SQLITE_OK {
                 sqlite3_bind_text(statement, 1, id, -1, SQLITE_TRANSIENT)
-                sqlite3_step(statement)
+                if sqlite3_step(statement) != SQLITE_DONE { print("⚠️ Kayıt işlemi başarısız: \(String(cString: sqlite3_errmsg(db)))") }
             }
             sqlite3_finalize(statement)
         }
@@ -514,7 +514,7 @@ public final class ErisMemoryDatabase: @unchecked Sendable {
                 sqlite3_bind_int(stmt, 10, item.requiresUserApproval ? 1 : 0)
                 sqlite3_bind_double(stmt, 11, item.createdAt.timeIntervalSince1970)
                 sqlite3_bind_double(stmt, 12, item.updatedAt.timeIntervalSince1970)
-                sqlite3_step(stmt)
+                if sqlite3_step(stmt) != SQLITE_DONE { print("⚠️ Kayıt yazılamadı: \(String(cString: sqlite3_errmsg(db)))") }
             }
             sqlite3_finalize(stmt)
         }
@@ -576,7 +576,7 @@ public final class ErisMemoryDatabase: @unchecked Sendable {
             var stmt: OpaquePointer?
             if sqlite3_prepare_v2(db, query, -1, &stmt, nil) == SQLITE_OK {
                 sqlite3_bind_text(stmt, 1, id.uuidString, -1, SQLITE_TRANSIENT)
-                sqlite3_step(stmt)
+                if sqlite3_step(stmt) != SQLITE_DONE { print("⚠️ Kayıt silinemedi: \(String(cString: sqlite3_errmsg(db)))") }
             }
             sqlite3_finalize(stmt)
         }
