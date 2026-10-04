@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 public enum VaultDocCategory: String, Codable, CaseIterable, Sendable {
     case passportId = "passport_id"             // Pasaport, Kimlik, Ehliyet

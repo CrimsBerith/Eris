@@ -40,7 +40,8 @@ final class ErisSecurityAndCalendarTests: XCTestCase {
         let result1 = CalendarCapability.parseNaturalLanguageEvent(from: sample1)
         XCTAssertNotNil(result1)
         if let res = result1 {
-            let cal = Calendar.current
+            var cal = Calendar(identifier: .gregorian)
+            cal.timeZone = TimeZone(identifier: "Europe/Istanbul") ?? .current
             let hour = cal.component(.hour, from: res.startDate)
             let minute = cal.component(.minute, from: res.startDate)
             XCTAssertEqual(hour, 14)
@@ -52,7 +53,8 @@ final class ErisSecurityAndCalendarTests: XCTestCase {
         let result2 = CalendarCapability.parseNaturalLanguageEvent(from: sample2)
         XCTAssertNotNil(result2)
         if let res = result2 {
-            let cal = Calendar.current
+            var cal = Calendar(identifier: .gregorian)
+            cal.timeZone = TimeZone(identifier: "Europe/Istanbul") ?? .current
             let hour = cal.component(.hour, from: res.startDate)
             XCTAssertEqual(hour, 20, "Akşam 8 saati 20:00 olarak parse edilmeli")
         }
@@ -60,7 +62,10 @@ final class ErisSecurityAndCalendarTests: XCTestCase {
     
     // MARK: - ErisRateLimiter Kotası & Güvenlik Testi
     func testRateLimiterOperations() {
-        let limiter = ErisRateLimiter.shared
+        let suite = "ErisRateLimiterTests.\(UUID().uuidString)"
+        let defaults = UserDefaults(suiteName: suite)!
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let limiter = ErisRateLimiter(userDefaults: defaults)
         limiter.ignoreCustomKeyOverrideForTesting = true
         limiter.resetForTesting()
         

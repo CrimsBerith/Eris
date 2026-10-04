@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -euo pipefail
 
 echo "=========================================="
 echo "🛡️  ERIS: Proje Doğrulama ve Sağlık Kontrolü"
@@ -17,17 +17,22 @@ else
 fi
 
 echo ""
-echo "2. macOS (ErisMac) Target Derleme Testi..."
-xcodebuild -project Eris.xcodeproj -scheme ErisMac -configuration Debug build -quiet
+echo "2. ErisCore XCTest kontrolleri..."
+swift test --package-path Packages/ErisCore
+echo "✅ ErisCore testleri BAŞARILI!"
+
+echo ""
+echo "3. macOS (ErisMac) Target Derleme Testi..."
+xcodebuild -project Eris.xcodeproj -scheme ErisMac -configuration Debug build -quiet CODE_SIGNING_ALLOWED=NO
 echo "✅ ErisMac derleme BAŞARILI!"
 
 echo ""
-echo "3. iOS (ErisIOS) Target Derleme Testi..."
-xcodebuild -project Eris.xcodeproj -scheme ErisIOS -destination "generic/platform=iOS Simulator" -configuration Debug build -quiet
+echo "4. iOS (ErisIOS) Target Derleme Testi..."
+xcodebuild -project Eris.xcodeproj -scheme ErisIOS -destination "generic/platform=iOS Simulator" -configuration Debug build -quiet CODE_SIGNING_ALLOWED=NO
 echo "✅ ErisIOS derleme BAŞARILI!"
 
 echo ""
-echo "4. AppIcon Varlık Kontrolleri..."
+echo "5. AppIcon Varlık Kontrolleri..."
 if [ -f "ErisMac/Resources/Assets.xcassets/AppIcon.appiconset/Contents.json" ] && [ -f "ErisIOS/Resources/Assets.xcassets/AppIcon.appiconset/Contents.json" ]; then
     echo "✅ Hem macOS hem iOS AppIcon setleri eksiksiz."
 else
@@ -36,7 +41,7 @@ else
 fi
 
 echo ""
-echo "5. Gizlilik Manifestosu (PrivacyInfo.xcprivacy) Kontrolleri..."
+echo "6. Gizlilik Manifestosu (PrivacyInfo.xcprivacy) Kontrolleri..."
 if [ -f "ErisMac/Resources/PrivacyInfo.xcprivacy" ] && [ -f "ErisIOS/Resources/PrivacyInfo.xcprivacy" ]; then
     echo "✅ Her iki platform için PrivacyInfo.xcprivacy mevcut."
 else
@@ -45,9 +50,9 @@ else
 fi
 
 echo ""
-echo "6. Entitlements & App Sandbox Kontrolleri..."
+echo "7. Entitlements Dosya Kontrolleri..."
 if [ -f "ErisMac/Resources/ErisMac.entitlements" ] && [ -f "ErisIOS/Resources/ErisIOS.entitlements" ]; then
-    echo "✅ App Sandbox ve yetki dosyaları mevcut."
+    echo "✅ Yetki dosyaları mevcut; imzalı paketteki yetkiler ayrıca doğrulanmalı."
 else
     echo "❌ HATA: Entitlements eksik!"
     exit 1
@@ -55,5 +60,6 @@ fi
 
 echo ""
 echo "=========================================="
-echo "🎉 TEBRİKLER: Eris projesi App Store review ve yayına hazır!"
+echo "✅ Test, derleme ve dosya varlığı kontrolleri geçti."
+echo "Yayın için imzalama, gerçek cihaz akışları ve gizlilik beyanları ayrıca doğrulanmalı."
 echo "=========================================="

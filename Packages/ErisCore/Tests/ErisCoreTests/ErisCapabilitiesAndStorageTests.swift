@@ -2,6 +2,20 @@ import XCTest
 @testable import ErisCore
 
 final class ErisCapabilitiesAndStorageTests: XCTestCase {
+    private var databaseDirectory: URL!
+    private var database: ErisMemoryDatabase!
+
+    override func setUpWithError() throws {
+        databaseDirectory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: databaseDirectory, withIntermediateDirectories: true)
+        database = ErisMemoryDatabase(databaseURL: databaseDirectory.appendingPathComponent("test.sqlite"))
+    }
+
+    override func tearDownWithError() throws {
+        database = nil
+        try FileManager.default.removeItem(at: databaseDirectory)
+        databaseDirectory = nil
+    }
     
     // MARK: - 1. Living Checklist Engine
     func testLivingChecklistEngineOperations() {
@@ -58,7 +72,7 @@ final class ErisCapabilitiesAndStorageTests: XCTestCase {
     
     // MARK: - 3. Memory Database (SQLite Persistence)
     func testMemoryDatabasePersistence() {
-        let db = ErisMemoryDatabase.shared
+        let db = database!
         
         // Open Loop Persistence
         let testLoop = OpenLoopItem(
@@ -86,7 +100,7 @@ final class ErisCapabilitiesAndStorageTests: XCTestCase {
     }
     
     func testMemoryDatabaseEditRecord() {
-        let db = ErisMemoryDatabase.shared
+        let db = database!
         
         let initialRecord = ErisMemoryRecord(
             category: .document,
