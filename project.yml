@@ -15,7 +15,7 @@ packages:
 
 settings:
   base:
-    SWIFT_VERSION: "5.9"
+    SWIFT_VERSION: "5.0"
     SWIFT_STRICT_CONCURRENCY: complete
     CLANG_ENABLE_MODULES: YES
 
@@ -72,3 +72,4 @@ targets:
         CODE_SIGNING_REQUIRED: NO
         CODE_SIGNING_ALLOWED: NO
         CODE_SIGN_ENTITLEMENTS: ErisIOS/Resources/ErisIOS.entitlements
+

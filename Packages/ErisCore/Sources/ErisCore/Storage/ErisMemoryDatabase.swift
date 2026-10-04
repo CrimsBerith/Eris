@@ -91,16 +91,21 @@ public struct ErisMemoryRecord: Identifiable, Codable, Sendable {
 }
 
 public final class ErisMemoryDatabase: @unchecked Sendable {
-    public static let shared = ErisMemoryDatabase()
+    public static let shared = ErisMemoryDatabase(onMemoriesChanged: {
+        ErisSyncService.shared.pushToCloud()
+    })
     private var db: OpaquePointer?
+    private let onMemoriesChanged: (@Sendable () -> Void)?
     private let dbQueue = DispatchQueue(label: "com.alfagolab.eris.memorydb", qos: .userInitiated)
     private let SQLITE_TRANSIENT = unsafeBitCast(-1, to: sqlite3_destructor_type.self)
     
-    private init() {
-        openDatabase()
+    // Tests can use a temporary database with no iCloud side effects.
+    // Initialization must never call back into the shared database through sync.
+    init(databaseURL: URL? = nil, onMemoriesChanged: (@Sendable () -> Void)? = nil) {
+        self.onMemoriesChanged = onMemoriesChanged
+        openDatabase(at: databaseURL ?? getDatabaseURL())
         createTable()
         migrateTableIfNeeded()
-        seedDefaultMemoriesIfNeeded()
     }
     
     deinit {
@@ -119,10 +124,11 @@ public final class ErisMemoryDatabase: @unchecked Sendable {
         return erisFolder.appendingPathComponent("eris_memory.sqlite")
     }
     
-    private func openDatabase() {
-        let path = getDatabaseURL().path
+    private func openDatabase(at url: URL) {
+        let path = url.path
         if sqlite3_open(path, &db) != SQLITE_OK {
             print("❌ Eris veritabanı açılamadı: \(path) — \(String(cString: sqlite3_errmsg(db)))")
+            sqlite3_close(db)
             db = nil
         } else {
             // WAL (Write-Ahead Logging) modu ile eşzamanlı okuma-yazma performansı ve kilitlenme (SQLITE_BUSY) önleme
@@ -226,50 +232,9 @@ public final class ErisMemoryDatabase: @unchecked Sendable {
         sqlite3_exec(db, "ALTER TABLE memories ADD COLUMN file_name TEXT;", nil, nil, nil)
     }
     
-    private func seedDefaultMemoriesIfNeeded() {
-        if getAllMemories().isEmpty {
-            saveMemory(ErisMemoryRecord(
-                category: .project,
-                title: "Eris Çok Dilli & Çok Ajanlı Mimari",
-                content: "12 dünya dili desteği, kullanıcı tanımlı özel ajanlar ve sesli not kasası hazır.",
-                tags: ["#mimari", "#proje", "#eris"],
-                source: "manual",
-                fileName: "Eris_Mimari.md",
-                pinned: true
-            ))
-            saveMemory(ErisMemoryRecord(
-                category: .technical,
-                title: "Swift 6 Concurrency & Actor Mimarisi",
-                content: "Data-race güvenliği için Sendable protokolü ve background task asenkron yönetimi.",
-                tags: ["#swift", "#kod", "#concurrency"],
-                source: "voice",
-                fileName: "Swift_Concurrency.swift",
-                pinned: true
-            ))
-            saveMemory(ErisMemoryRecord(
-                category: .finance,
-                title: "İlk Çeyrek Bütçe & Fiyat Notları",
-                content: "Bulut yapay zekâ entegrasyonu ve sunucu maliyetleri ayrıldı. Kurlar takipte.",
-                tags: ["#finans", "#bütçe", "#kurlar"],
-                source: "voice",
-                fileName: "Butce_Q1.txt",
-                pinned: false
-            ))
-            saveMemory(ErisMemoryRecord(
-                category: .designIdea,
-                title: "Koleksiyon Form & Silüet Notu",
-                content: "Akıcı formlar, biyomimetik drapeler ve doğal kumaş tuşesi vizyonu.",
-                tags: ["#tasarım", "#koleksiyon", "#drape"],
-                source: "voice",
-                fileName: "Tasarim_Konsepti.md",
-                pinned: false
-            ))
-        }
-    }
-    
     public func saveMemory(_ item: ErisMemoryRecord) {
         saveMemoryInternal(item)
-        ErisSyncService.shared.pushToCloud()
+        onMemoriesChanged?()
     }
     
     public func saveMemoryInternal(_ item: ErisMemoryRecord) {
@@ -340,7 +305,7 @@ public final class ErisMemoryDatabase: @unchecked Sendable {
             }
             sqlite3_finalize(statement)
         }
-        ErisSyncService.shared.pushToCloud()
+        onMemoriesChanged?()
     }
     
     public func updateMemory(_ item: ErisMemoryRecord) {
@@ -364,7 +329,7 @@ public final class ErisMemoryDatabase: @unchecked Sendable {
             }
             sqlite3_finalize(statement)
         }
-        ErisSyncService.shared.pushToCloud()
+        onMemoriesChanged?()
     }
 
     public func getAllMemories() -> [ErisMemoryRecord] {
@@ -418,7 +383,7 @@ public final class ErisMemoryDatabase: @unchecked Sendable {
             }
             sqlite3_finalize(statement)
         }
-        ErisSyncService.shared.pushToCloud()
+        onMemoriesChanged?()
     }
     
     public func searchMemories(keyword: String) -> [ErisMemoryRecord] {

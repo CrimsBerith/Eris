@@ -220,6 +220,16 @@ public final class ErisLifeOSEngine: Sendable {
             )
         }
         
+        // 7. Takvim Komutları
+        if lower.contains("toplantı ekle") || lower.contains("etkinlik ekle") || lower.contains("takvime kaydet") || lower.contains("randevu ekle") || lower.contains("prova ekle") {
+            let parsed = CalendarCapability.parseNaturalLanguageEvent(from: trimmed) ?? (title: trimmed, startDate: Date().addingTimeInterval(3600), endDate: Date().addingTimeInterval(7200))
+            let formatter = DateFormatter()
+            formatter.timeZone = TimeZone(identifier: "Europe/Istanbul")
+            formatter.dateFormat = "d MMMM EEEE, HH:mm"
+            let dateStr = formatter.string(from: parsed.startDate)
+            return .calendarEvent(title: parsed.title, start: parsed.startDate, end: parsed.endDate, dateStr: dateStr)
+        }
+
         // 6. Akıllı Bilgi & Not Çıkarımı
         if let extracted = ErisNoteIntelligence.shared.analyzeUtterance(trimmed, isVoice: isVoice) {
             return .extractedNote(extracted)
@@ -271,16 +281,6 @@ public final class ErisLifeOSEngine: Sendable {
             )
         }
         
-        // 7. Takvim Komutları
-        if lower.contains("toplantı ekle") || lower.contains("etkinlik ekle") || lower.contains("takvime kaydet") || lower.contains("randevu ekle") || lower.contains("prova ekle") {
-            let parsed = CalendarCapability.parseNaturalLanguageEvent(from: trimmed) ?? (title: trimmed, startDate: Date().addingTimeInterval(3600), endDate: Date().addingTimeInterval(7200))
-            let formatter = DateFormatter()
-            formatter.timeZone = TimeZone(identifier: "Europe/Istanbul")
-            formatter.dateFormat = "d MMMM EEEE, HH:mm"
-            let dateStr = formatter.string(from: parsed.startDate)
-            return .calendarEvent(title: parsed.title, start: parsed.startDate, end: parsed.endDate, dateStr: dateStr)
-        }
-        
         return .none
     }
 }
@@ -299,3 +299,4 @@ public enum LifeOSActionType: Sendable {
     case calendarEvent(title: String, start: Date, end: Date, dateStr: String)
     case none
 }
+

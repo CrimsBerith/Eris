@@ -235,7 +235,6 @@ final class ErisIOSState: ObservableObject {
         )
         ErisMemoryDatabase.shared.saveMemory(record)
         self.memories = ErisMemoryDatabase.shared.getAllMemories()
-        ErisSyncService.shared.pushToCloud()
     }
     
     func togglePin(id: String) {
@@ -253,13 +252,11 @@ final class ErisIOSState: ObservableObject {
             fileName: fileName
         )
         self.memories = ErisMemoryDatabase.shared.getAllMemories()
-        ErisSyncService.shared.pushToCloud()
     }
     
     func deleteMemory(id: String) {
         ErisMemoryDatabase.shared.deleteMemory(id: id)
         self.memories = ErisMemoryDatabase.shared.getAllMemories()
-        ErisSyncService.shared.pushToCloud()
     }
     
     func sendUserMessage(_ text: String) {
@@ -367,11 +364,17 @@ final class ErisIOSState: ObservableObject {
             messages.append(userMsg)
             inputText = ""
             
-            self.pendingApproval = PendingAction(
-                actionType: .calendarWrite,
-                summary: "\(title) — Tarih: \(dateStr)",
-                payloadJson: "{\"title\": \"\(title)\", \"start\": \(start.timeIntervalSince1970), \"end\": \(end.timeIntervalSince1970)}"
-            )
+            do {
+                let payload = CalendarEventPayload(title: title, start: start, end: end)
+                self.pendingApproval = PendingAction(
+                    actionType: .calendarWrite,
+                    summary: "\(title) — Tarih: \(dateStr)",
+                    payloadJson: try payload.encodedJSON()
+                )
+            } catch {
+                messages.append(Message(role: .assistant, content: "Takvim kaydı hazırlanamadı: \(error.localizedDescription)"))
+                return
+            }
             messages.append(Message(role: .assistant, content: "Takvim kaydı hazır (\(title), \(dateStr)). Onaylıyor musun?"))
             ErisSpeaker.shared.speak("Takvim kaydını hazırladım. Onaylıyor musun?", tone: self.selectedVoiceTone)
             return
@@ -470,13 +473,15 @@ final class ErisIOSState: ObservableObject {
             messages.append(Message(role: .assistant, content: "Onaylandı. '\(title)' Notlar & Dosyalar kasana kaydedildi."))
             ErisSpeaker.shared.speak("Onaylandı. Bilgi kasanıza eklendi.", tone: self.selectedVoiceTone)
         } else if action.actionType == .calendarWrite {
-            _ = try? CalendarCapability.shared.createEvent(
-                title: action.summary,
-                start: Date().addingTimeInterval(3600),
-                end: Date().addingTimeInterval(7200)
-            )
-            messages.append(Message(role: .assistant, content: "Onaylandı. Ajandana ekledim: \(action.summary)"))
-            ErisSpeaker.shared.speak("Onaylandı. Ajandana ekledim.", tone: self.selectedVoiceTone)
+            do {
+                try CalendarActionExecutor.execute(payloadJSON: action.payloadJson)
+                messages.append(Message(role: .assistant, content: "Onaylandı. Ajandana ekledim: \(action.summary)"))
+                ErisSpeaker.shared.speak("Onaylandı. Ajandana ekledim.", tone: self.selectedVoiceTone)
+            } catch {
+                messages.append(Message(role: .assistant, content: "Takvim kaydı tamamlanamadı: \(error.localizedDescription)"))
+                ErisSpeaker.shared.speak("Takvim kaydı tamamlanamadı. Detayları ekrana yazdım.", tone: self.selectedVoiceTone)
+                return
+            }
         }
         pendingApproval = nil
     }
@@ -580,5 +585,6 @@ struct IOSBottomTabBar: View {
         .ignoresSafeArea(.keyboard, edges: .bottom)
     }
 }
+
 
 

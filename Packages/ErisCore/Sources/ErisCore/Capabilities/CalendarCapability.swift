@@ -19,7 +19,7 @@ public struct ErisCalendarEvent: Identifiable, Codable, Sendable {
     }
 }
 
-public final class CalendarCapability: @unchecked Sendable {
+public final class CalendarCapability: CalendarEventWriting, @unchecked Sendable {
     public static let shared = CalendarCapability()
     private let eventStore = EKEventStore()
     
@@ -42,7 +42,8 @@ public final class CalendarCapability: @unchecked Sendable {
     }
     
     public func getTodayEvents() -> [ErisCalendarEvent] {
-        let calendar = Calendar.current
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = TimeZone(identifier: "Europe/Istanbul") ?? .current
         let startOfDay = calendar.startOfDay(for: Date())
         guard let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay) else {
             return []
@@ -85,15 +86,27 @@ public final class CalendarCapability: @unchecked Sendable {
     }
     
     public func createEvent(title: String, start: Date, end: Date, notes: String? = nil) throws -> String {
+        try CalendarEventPayload(title: title, start: start, end: end).validate()
+        let status = EKEventStore.authorizationStatus(for: .event)
+        guard status == .fullAccess || status == .writeOnly else {
+            throw CalendarActionError.permissionDenied
+        }
+        guard let calendar = eventStore.defaultCalendarForNewEvents,
+              calendar.allowsContentModifications else {
+            throw CalendarActionError.noWritableCalendar
+        }
         let event = EKEvent(eventStore: eventStore)
         event.title = title
         event.startDate = start
         event.endDate = end
         event.notes = notes
-        event.calendar = eventStore.defaultCalendarForNewEvents
+        event.calendar = calendar
         
         try eventStore.save(event, span: .thisEvent)
-        return event.eventIdentifier ?? UUID().uuidString
+        guard let identifier = event.eventIdentifier else {
+            throw CalendarActionError.missingEventIdentifier
+        }
+        return identifier
     }
     
     public func deleteEvent(identifier: String) throws {
@@ -104,10 +117,15 @@ public final class CalendarCapability: @unchecked Sendable {
     
     // Doğal dil Türkçe tarih ve saat çözümleme
     // Örnek: "Yarın saat 14:00'te toplantı", "Bugün 16.30 kahve", "Pazartesi saat 10'da sunum", "Akşam 8 yemek"
-    public static func parseNaturalLanguageEvent(from text: String) -> (title: String, startDate: Date, endDate: Date)? {
+    public static func parseNaturalLanguageEvent(
+        from text: String,
+        now: Date = Date(),
+        timeZone: TimeZone = TimeZone(identifier: "Europe/Istanbul") ?? .current
+    ) -> (title: String, startDate: Date, endDate: Date)? {
         let lower = text.lowercased()
-        let calendar = Calendar.current
-        var baseDate = Date()
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = timeZone
+        var baseDate = now
         
         // 1. Gün Tespiti
         if lower.contains("yarın") {
@@ -121,7 +139,7 @@ public final class CalendarCapability: @unchecked Sendable {
                 ("perşembe", 5), ("cuma", 6), ("cumartesi", 7), ("pazar", 1)
             ]
             for item in weekdays {
-                if lower.contains(item.name) {
+                if lower.range(of: #"\b"# + item.name + #"\b"#, options: .regularExpression) != nil {
                     let currentWeekday = calendar.component(.weekday, from: baseDate)
                     var daysToAdd = item.weekday - currentWeekday
                     if daysToAdd <= 0 { daysToAdd += 7 }
@@ -200,7 +218,7 @@ public final class CalendarCapability: @unchecked Sendable {
         components.hour = targetHour ?? 10
         components.minute = targetMinute
         components.second = 0
-        components.timeZone = TimeZone(identifier: "Europe/Istanbul")
+        components.timeZone = timeZone
         
         guard let startDate = calendar.date(from: components) else { return nil }
         let endDate = calendar.date(byAdding: .hour, value: 1, to: startDate) ?? startDate.addingTimeInterval(3600)
@@ -216,7 +234,7 @@ public final class CalendarCapability: @unchecked Sendable {
             "pazartesi", "salı", "çarşamba", "perşembe", "cuma", "cumartesi", "pazar",
             "saat", "lütfen", "ekle", "kaydet", "'te", "'ta", "'de", "'da"
         ]
-        for r in removals {
+        for r in removals.sorted(by: { $0.count > $1.count }) {
             cleanTitle = cleanTitle.replacingOccurrences(of: r, with: " ", options: .caseInsensitive)
         }
         // Fazla boşlukları temizle

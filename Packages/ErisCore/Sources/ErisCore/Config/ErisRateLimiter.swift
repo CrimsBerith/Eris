@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 /// Eris Sıfır-Kurulum mimarisinde geliştirici API kotasını ve maliyetlerini
 /// aşırı tüketimden ve kötüye kullanımdan koruyan akıllı günlük istek sınırlayıcı.
