@@ -9,7 +9,9 @@ bash scripts/verify_project.sh
 This runs ErisCore XCTest, generates the Xcode project when XcodeGen is available,
 builds the macOS app and iOS simulator target without signing, and checks the
 presence of icon, privacy manifest and entitlement files. GitHub Actions runs
-the same command for pull requests and pushes to main, on macOS 15 / Xcode 16.4.
+the package tests and both builds as separate steps for pull requests and pushes
+to main, on macOS 15 / Xcode 16.4. The XCTest step has a five-minute limit so a
+hung test does not consume the entire workflow runtime.
 SDK 26 Liquid Glass symbols are compiled only with the bundled Swift 6.2+
 toolchain; Xcode 16 uses the existing glassmorphism fallback.
 
