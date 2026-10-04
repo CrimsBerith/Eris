@@ -42,14 +42,20 @@ private struct ErisGlassModifier: ViewModifier {
     @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
 
     func body(content: Content) -> some View {
+        // Xcode 16 does not know the SDK 26 symbols, even inside #available.
+        #if compiler(>=6.2)
         if #available(iOS 26, macOS 26, *) {
             liquidGlass(content: content)
         } else {
             legacyGlass(content: content)
         }
+        #else
+        legacyGlass(content: content)
+        #endif
     }
 
     // MARK: Liquid Glass (iOS 26+ / macOS 26+)
+    #if compiler(>=6.2)
     @available(iOS 26, macOS 26, *)
     private func liquidGlass(content: Content) -> some View {
         var glass = Glass.regular
@@ -57,6 +63,7 @@ private struct ErisGlassModifier: ViewModifier {
         if interactive { glass = glass.interactive() }
         return content.glassEffect(glass, in: shape)
     }
+    #endif
 
     // MARK: Eski Glassmorphism (iOS 17–25 / macOS 14–25)
     private func legacyGlass(content: Content) -> some View {
@@ -254,10 +261,14 @@ public struct ErisGlassGroup<Content: View>: View {
     }
 
     public var body: some View {
+        #if compiler(>=6.2)
         if #available(iOS 26, macOS 26, *) {
             GlassEffectContainer { content }
         } else {
             content
         }
+        #else
+        content
+        #endif
     }
 }

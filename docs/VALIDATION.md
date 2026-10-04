@@ -10,6 +10,8 @@ This runs ErisCore XCTest, generates the Xcode project when XcodeGen is availabl
 builds the macOS app and iOS simulator target without signing, and checks the
 presence of icon, privacy manifest and entitlement files. GitHub Actions runs
 the same command for pull requests and pushes to main, on macOS 15 / Xcode 16.4.
+SDK 26 Liquid Glass symbols are compiled only with the bundled Swift 6.2+
+toolchain; Xcode 16 uses the existing glassmorphism fallback.
 
 Database regression tests use temporary SQLite files and no iCloud callback.
 Calendar action tests use a recording adapter, so they do not create real events.
